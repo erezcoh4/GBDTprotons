@@ -5,7 +5,6 @@ sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/mySoftware/MySoftwarePackag
 sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/protonid')
 
 
-import numpy as np
 import input_flags ; flags = input_flags.get_args()
 import Initiation as init
 from my_tools import *
@@ -25,6 +24,7 @@ if flags.worker=="erez":
     import matplotlib.ticker as ticker
     import boost_cosmic
     import predict_cosmic
+    import numpy as np
 
 elif flags.worker=="uboone":
     
