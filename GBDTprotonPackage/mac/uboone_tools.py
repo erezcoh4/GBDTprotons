@@ -9,20 +9,27 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import pylab
 import numpy as np
-import input_flags
+import input_flags ; flags = input_flags.get_args()
 import boost_cosmic
 import predict_cosmic
+import Initiation as init
 from my_tools import *
+
+
 
 
 # paths
 # -------------------------
 if flags.worker=="erez":
     
-    main_path           = "/Users/erezcohen/Desktop/uBoone/AnalysisTreesAna"
+    main_path = "/Users/erezcohen/Desktop/uBoone/AnalysisTreesAna"
+    lists_path = "/Users/erezcohen/Desktop/uBoone/Lists"
     import pandas as pd
 
 elif flags.worker=="uboone":
     
-    main_path           = "/uboone/app/users/ecohen/AnalysisTreesAna"
+    main_path = "/uboone/app/users/ecohen/AnalysisTreesAna"
+    lists_path = "uboone/app/users/ecohen/Lists"
 
+
+anatrees_lists_path = "/pnfs/uboone/persistent/users/aschu/devel/v05_11_01/hadd"
