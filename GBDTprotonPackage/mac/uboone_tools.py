@@ -33,3 +33,4 @@ elif flags.worker=="uboone":
 
 
 anatrees_lists_path = "/pnfs/uboone/persistent/users/aschu/devel/v05_11_01/hadd"
+anatrees_data_path = "/uboone/data/users/ecohen/AnalysisTreeData"
