@@ -29,7 +29,7 @@ if flags.worker=="erez":
 elif flags.worker=="uboone":
     
     main_path = "/uboone/app/users/ecohen/AnalysisTreesAna"
-    lists_path = "uboone/app/users/ecohen/Lists"
+    lists_path = "/uboone/data/users/ecohen/Lists"
 
 
 anatrees_lists_path = "/pnfs/uboone/persistent/users/aschu/devel/v05_11_01/hadd"
