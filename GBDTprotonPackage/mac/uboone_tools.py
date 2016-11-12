@@ -7,8 +7,8 @@ sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/protonid')
 
 import input_flags ; flags = input_flags.get_args()
 import Initiation as init
+from ROOT import larlite
 from my_tools import *
-
 
 
 
