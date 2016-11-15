@@ -5,7 +5,6 @@ from uboone_tools import *
 
 
 
-
 # The features that we want to use for the GBDT
 # -------------------------
 feature_names = [ # geometry
@@ -22,7 +21,7 @@ features_scores_rse = [
                         'run','subrun','event','trackid','p_score'
                         ]
 
-features_scores_roi = [
+features_pscores_roi = [
                        'run','subrun','event','trackid'
                        ,'U_start_wire','U_start_time','U_end_wire','U_end_time'
                        ,'V_start_wire','V_start_time','V_end_wire','V_end_time'
@@ -31,17 +30,14 @@ features_scores_roi = [
                        ]
 
 
-
-
-
-
-# paths
-# -------------------------
-GBDTmodels_path         = main_path + "/GBDTmodels"
-GBDTprotonsLists_path   = main_path + "/PassedGBDTFiles"
-
-def Classified_protons_path( GBDTmodelName ):
-    return  GBDTprotonsLists_path + "/" + GBDTmodelName
+features_multiscores_roi = [
+                        'run'           ,'subrun'       ,'event'        ,'trackid'
+                        ,'U_start_wire' ,'U_start_time' ,'U_end_wire'   ,'U_end_time'
+                        ,'V_start_wire' ,'V_start_time' ,'V_end_wire'   ,'V_end_time'
+                        ,'Y_start_wire' ,'Y_start_time' ,'Y_end_wire'   ,'Y_end_time'
+                        ,'mscore_p'     ,'mscore_mu'    ,'mscore_em'    ,'mscore_cos'
+                        ,'mscore_max'
+                        ]
 
 
 
@@ -91,6 +87,13 @@ def TestSampleFileName( FileTypeToDivide , NumberOfEventsToTest ):
 # -------------------------
 def GBDTtreeName( GBDTmodelName ):
     return GBDTmodels_path + "/" + GBDTmodelName + ".bst"
+
+
+
+
+
+
+
 
 
 # methods
@@ -270,10 +273,31 @@ def calc_all_gbdt_scores( TracksListName , GBDTmodelName ):
 
     # stream into output files
     # all features + scores
-    allfeatures_filename = GBDTprotonsListName( GBDTmodelName, TracksListName, 0,'features')
+    allfeatures_filename = GBDTprotonsListName( GBDTmodelName, TracksListName, 0,'features_and_scores')
     tracks_scores.to_csv( allfeatures_filename , header=True )
     print_filename( allfeatures_filename , "csv file of all features:" )
 
+
+
+
+# -------------------------
+def calc_all_gbdt_multiscores( TracksListName , GBDTmodelName ):
+    if flags.verbose: print_important( 'calc all gbdt multiscores' )
+    SampleFileName = FeaturesFileName( TracksListName )
+    if flags.verbose: print_filename( SampleFileName , "loading data from" )
+    
+    # create a directory for the results of classifying from this GBDT model
+    init.generate_directory( Classified_protons_path(GBDTmodelName) )
+    tracks_data = pd.read_csv( SampleFileName )
+    if flags.verbose: print "loaded %d tracks"%len(tracks_data)
+    tracks_scores = predict_multi.predict_multiscore( tracks_data , GBDTtreeName( GBDTmodelName ) , feature_names )
+    if flags.verbose: print "predicted on the %d tracks"%len(tracks_data)
+
+    # stream into output files
+    # all features + scores
+    allfeatures_filename = GBDTprotonsListName( GBDTmodelName, TracksListName, 0 , 'features_and_scores' )
+    tracks_scores.to_csv( allfeatures_filename , header=True )
+    print_filename( allfeatures_filename , "wrote csv file of all features and scores:" )
 
 
 
@@ -282,7 +306,7 @@ def calc_all_gbdt_scores( TracksListName , GBDTmodelName ):
 def select_gbdt_protons( TracksListName , GBDTmodelName , p_score = 0.99 ):
 
 
-    tracks = pd.read_csv( GBDTprotonsListName( GBDTmodelName, TracksListName, 0,'features') )
+    tracks = pd.read_csv( GBDTprotonsListName( GBDTmodelName, TracksListName, 0,'features_and_scores') )
     if flags.verbose: print "loaded %d tracks "%len(tracks)
     
     PassedGBDTFileRSEName = GBDTprotonsListName( GBDTmodelName, TracksListName, p_score ,'rse')

@@ -7,7 +7,8 @@ from gbdt_tools import *
     options: 
         divide      { "divide training and testing samples" }
         train       { "train GBDTs cross validation" }
-        scores      { "compute all GBDT p-scores" }
+        scores      { "compute all GBDT p-scores" (for cosmic data) }
+        multiscores { "compute all GBDT multiscores" }
         select      { "select GBDT protons" }
 '''
 
@@ -15,7 +16,7 @@ from gbdt_tools import *
 TrainingDataType        = "MC_BNB"
 NumberOfTrainingEvents  = 300000
 TracksListName          = "BNB_5e19POT"
-GBDTmodelName           = "BNB_TrainedOn_only_MC_BNB"
+GBDTmodelName           = "multi_BNB_TrainedOn_MCBNB_MCCOSMIC" # options: 'BNB_TrainedOn_only_MC_BNB'
 p_score                 = 0.99
 
 
@@ -36,9 +37,15 @@ if flags.option=="train GBDTs cross validation" or 'train' in flags.option:
 
 # -------------------------------------------------------------------
 if flags.option=="compute all GBDT p-scores" or 'scores' in flags.option:
-
+    # for cosmic tracks classification - single-class classifier
     calc_all_gbdt_scores( TracksListName , GBDTmodelName )
 
+
+# -------------------------------------------------------------------
+if flags.option=="compute all GBDT multiscore" or 'multiscore' in flags.option:
+    # for cosmic tracks classification - multi-class classifier
+    # scores for muon , pion , proton , electron/photon
+    calc_all_gbdt_multiscores( TracksListName , GBDTmodelName )
 
 
 # -------------------------------------------------------------------
