@@ -45,8 +45,6 @@ namespace std {} using namespace std;
 namespace ROOT {
    static TClass *GBDTanalysis_Dictionary();
    static void GBDTanalysis_TClassManip(TClass*);
-   static void *new_GBDTanalysis(void *p = 0);
-   static void *newArray_GBDTanalysis(Long_t size, void *p);
    static void delete_GBDTanalysis(void *p);
    static void deleteArray_GBDTanalysis(void *p);
    static void destruct_GBDTanalysis(void *p);
@@ -57,12 +55,10 @@ namespace ROOT {
       ::GBDTanalysis *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::GBDTanalysis));
       static ::ROOT::TGenericClassInfo 
-         instance("GBDTanalysis", "GBDTanalysis.h", 24,
+         instance("GBDTanalysis", "GBDTanalysis.h", 25,
                   typeid(::GBDTanalysis), DefineBehavior(ptr, ptr),
                   &GBDTanalysis_Dictionary, isa_proxy, 4,
                   sizeof(::GBDTanalysis) );
-      instance.SetNew(&new_GBDTanalysis);
-      instance.SetNewArray(&newArray_GBDTanalysis);
       instance.SetDelete(&delete_GBDTanalysis);
       instance.SetDeleteArray(&deleteArray_GBDTanalysis);
       instance.SetDestructor(&destruct_GBDTanalysis);
@@ -88,13 +84,6 @@ namespace ROOT {
 } // end of namespace ROOT
 
 namespace ROOT {
-   // Wrappers around operator new
-   static void *new_GBDTanalysis(void *p) {
-      return  p ? new(p) ::GBDTanalysis : new ::GBDTanalysis;
-   }
-   static void *newArray_GBDTanalysis(Long_t nElements, void *p) {
-      return p ? new(p) ::GBDTanalysis[nElements] : new ::GBDTanalysis[nElements];
-   }
    // Wrapper around operator delete
    static void delete_GBDTanalysis(void *p) {
       delete ((::GBDTanalysis*)p);

@@ -2,7 +2,7 @@
     useful tools for GBDT analysis
 '''
 from uboone_tools import *
-
+from ROOT import GBDTanalysis
 
 
 # The features that we want to use for the GBDT
@@ -18,15 +18,18 @@ feature_names = [ # geometry
                  ]
 
 features_scores_rse = [
-                        'run','subrun','event','trackid','p_score'
+                        'run','subrun','event','trackid'
+                       ,'mscore_p'     ,'mscore_mu'    ,'mscore_em'    ,'mscore_cos'
+                       ,'mscore_max'
                         ]
 
-features_pscores_roi = [
+features_scores_roi = [
                        'run','subrun','event','trackid'
-                       ,'U_start_wire','U_start_time','U_end_wire','U_end_time'
-                       ,'V_start_wire','V_start_time','V_end_wire','V_end_time'
-                       ,'Y_start_wire','Y_start_time','Y_end_wire','Y_end_time'
-                       ,'p_score'
+                        ,'U_start_wire','U_start_time','U_end_wire','U_end_time'
+                        ,'V_start_wire','V_start_time','V_end_wire','V_end_time'
+                        ,'Y_start_wire','Y_start_time','Y_end_wire','Y_end_time'
+                        ,'mscore_p'     ,'mscore_mu'    ,'mscore_em'    ,'mscore_cos'
+                        ,'mscore_max'
                        ]
 
 
@@ -65,7 +68,21 @@ def GBDTprotonsListName( GBDTmodelName , DataListName , p_score = 0 , ListFeatur
 
     return classified_protons_list_path + "/" + classified_protons_list_full_name + ".csv"
 
+# -------------------------
+def GBDTclassListName( GBDTmodelName, DataListName, maxscore='protons' , score=0 ,ListFeatures = 'rse'):
+    
+    classification_name = DataListName + "_" + GBDTmodelName
+    classified_list_path = Classified_protons_path(GBDTmodelName)
+    classified_list_name = "passedGBDT_" + classification_name + "_maxscored_" + maxscore
+    
+    if score == 0:
+        classified_list_full_name = classified_list_name + "_allscores"
+    else:
+        classified_list_full_name = classified_list_name + "_score_%.2f"%p_score
+    
+    classified_list_full_name = classified_list_full_name + "_" + ListFeatures
 
+    return classified_list_path + "/" + classified_list_full_name + ".csv"
 
 # -------------------------
 def FeaturesFileName( FileType ):
@@ -324,6 +341,101 @@ def select_gbdt_protons( TracksListName , GBDTmodelName , p_score = 0.99 ):
     tracks_selected[ features_scores_roi ].to_csv( PassedGBDTFileROIName , sep=' ' , header=True , index=False )
     print_filename( PassedGBDTFileRSEName , "only R/S/E & scores written to file" )
     print_filename( PassedGBDTFileROIName , "R/S/E, ROIs and scores written to file" )
+
+
+
+
+
+# -------------------------
+def select_analysistrees_to_gbdt_class( TracksListName , GBDTmodelName ,
+                                       maxscore = 'protons', score = 0.99 ):
+    
+    allfeatures_filename = GBDTprotonsListName( GBDTmodelName, TracksListName, 0 , 'features_and_scores' )
+    tracks = pd.read_csv( allfeatures_filename )
+    if ('proton' in maxscore):
+        classified_tracks = tracks[tracks.mscore_max == 0]
+    elif ('muon' in maxscore):
+        classified_tracks = tracks[tracks.mscore_max == 1]
+    elif ('pion' in maxscore):
+        classified_tracks = tracks[tracks.mscore_max == 2]
+    elif ('em' in maxscore):
+        classified_tracks = tracks[tracks.mscore_max == 3]
+    elif ('cosmic' in maxscore):
+        classified_tracks = tracks[tracks.mscore_max == 4]
+    print "read classified tracks max-scodes as ",maxscore
+    PassedGBDTFileRSEName = GBDTclassListName( GBDTmodelName, TracksListName, maxscore , score ,'rse')
+    PassedGBDTFileROIName = GBDTclassListName( GBDTmodelName, TracksListName, maxscore , score ,'roi')
+    classified_tracks[ features_scores_rse ].to_csv( PassedGBDTFileRSEName , sep=' ' , header=False , index=False )
+    classified_tracks[ features_scores_roi ].to_csv( PassedGBDTFileROIName , sep=' ' , header=True , index=False )
+    print_filename( PassedGBDTFileRSEName , "only R/S/E & scores written to file" )
+    print_filename( PassedGBDTFileROIName , "R/S/E, ROIs and scores written to file" )
+
+
+
+
+# -------------------------
+def find_rse( rse , EventsList ):
+    for r,s,e in zip(EventsList['run'],EventsList['subrun'],EventsList['event']):
+        if r == rse[0] and s == rse[1] and e == rse[2]:
+            return True
+    return False
+
+
+
+
+
+
+# -------------------------
+def filter_analysistrees_to_gbdt_class( TracksListName , GBDTmodelName ,
+                                       maxscore = 'protons', score = 0.99 ):
+
+    PassedGBDTFileRSEName = GBDTclassListName( GBDTmodelName, TracksListName, maxscore , score ,'rse')
+    classified_tracks = pd.read_csv( PassedGBDTFileRSEName , sep=' ' , names=features_scores_rse)
+    filename_prefix = anafiles_path + "/Tracks_" + TracksListName + "_AnalysisTrees"
+    
+    ana = TPlots( filename_prefix + ".root" , 'TracksTree' )
+    all_tracks_tree = ana.GetTree()
+    gbdt_classification = "maxscored_" + maxscore + "_score_%.2f"%score
+    
+    gbdt_analyzer = GBDTanalysis( all_tracks_tree , flags.verbose )
+    
+    out_file_name = filename_prefix + "_"  + gbdt_classification + ".root"
+    out_file = ROOT.TFile( out_file_name ,"recreate")
+    filtered_tree = all_tracks_tree.CloneTree(0)
+    print 'initialized output tree'
+    Nreduced = int(flags.evnts_frac*all_tracks_tree.GetEntries())
+    for i in range(Nreduced):
+        
+        rse = gbdt_analyzer.GetRSE(i)
+        
+        if find_rse( rse , classified_tracks ):
+            
+            print 'found rse %d/%d/%d [%.2f'%(rse[0],rse[1],rse[2],100.*float(i)/Nreduced),"%]"
+            
+            filtered_tree.Fill()
+
+    print 'gbdt analyzer completed job'
+    print_filename(out_file_name, "filtered %s (%d entries)"%(gbdt_classification,filtered_tree.GetEntries()) )
+    filtered_tree.Write()
+    out_file.Write()
+    out_file.Close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

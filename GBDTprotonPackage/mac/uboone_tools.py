@@ -8,6 +8,7 @@ sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/GBDTprotons/GBDTprotonPacka
 import input_flags ; flags = input_flags.get_args()
 import Initiation as init
 from ROOT import larlite
+from ROOT import TPlots
 from my_tools import *
 
 
