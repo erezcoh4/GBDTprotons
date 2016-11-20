@@ -349,6 +349,7 @@ def select_gbdt_protons( TracksListName , GBDTmodelName , p_score = 0.99 ):
 # -------------------------
 def select_analysistrees_to_gbdt_class( TracksListName , GBDTmodelName ,
                                        maxscore = 'protons', score = 0.99 ):
+    classified_dirname = Classified_protons_path( GBDTmodelName )
     
     allfeatures_filename = GBDTprotonsListName( GBDTmodelName, TracksListName, 0 , 'features_and_scores' )
     tracks = pd.read_csv( allfeatures_filename )
@@ -385,47 +386,80 @@ def find_rse( rse , EventsList ):
 
 
 
+
+
 # -------------------------
-def filter_analysistrees_to_gbdt_class( TracksListName , GBDTmodelName ,
-                                       maxscore = 'protons', score = 0.99 ):
-
-    PassedGBDTFileRSEName = GBDTclassListName( GBDTmodelName, TracksListName, maxscore , score ,'rse')
-    classified_tracks = pd.read_csv( PassedGBDTFileRSEName , sep=' ' , names=features_scores_rse)
-    filename_prefix = anafiles_path + "/Tracks_" + TracksListName + "_AnalysisTrees"
+def filter_analysistrees_to_gbdt_class( TracksListName , GBDTmodelName  , maxscore = 'protons', score = 0.99  ):
+    '''
+        This functionallity schemes (big) analysis trees
+        and returns a tree containing only entries with a Run/Subrun/Event
+        of a given list (RSE map)
+        '''
+    from ROOT import ImportantTools
+    it = ImportantTools()
     
-    ana = TPlots( filename_prefix + ".root" , 'TracksTree' )
+    # input: (1) analysis trees
+    ana = TPlots( anafiles_path + "/Tracks_" + TracksListName + "_AnalysisTrees.root" , 'TracksTree' )
     all_tracks_tree = ana.GetTree()
-    gbdt_classification = "maxscored_" + maxscore + "_score_%.2f"%score
-    
-    gbdt_analyzer = GBDTanalysis( all_tracks_tree , flags.verbose )
-    
-    out_file_name = filename_prefix + "_"  + gbdt_classification + ".root"
-    out_file = ROOT.TFile( out_file_name ,"recreate")
-    filtered_tree = all_tracks_tree.CloneTree(0)
-    print 'initialized output tree'
-    Nreduced = int(flags.evnts_frac*all_tracks_tree.GetEntries())
-    for i in range(Nreduced):
-        
-        rse = gbdt_analyzer.GetRSE(i)
-        
-        if find_rse( rse , classified_tracks ):
-            
-            print 'found rse %d/%d/%d [%.2f'%(rse[0],rse[1],rse[2],100.*float(i)/Nreduced),"%]"
-            
-            filtered_tree.Fill()
+    # input: (2) r/s/e list to filter the analysistree from
+    gbdt_class_list_name = GBDTclassListName( GBDTmodelName, TracksListName, maxscore , score ,'rse')
 
-    print 'gbdt analyzer completed job'
-    print_filename(out_file_name, "filtered %s (%d entries)"%(gbdt_classification,filtered_tree.GetEntries()) )
-    filtered_tree.Write()
-    out_file.Write()
+    print_filename(gbdt_class_list_name , "rse list to scheme from: ")
+
+    # output: schemed analysistree file
+    out_file_name = anafiles_path + "/Tracks_" + TracksListName + "_AnalysisTrees_"  + gbdt_classification + ".root"
+    out_file = ROOT.TFile( out_file_name , "recreate" )
+    out_tree = it.SchemeTreeRSEList( all_tracks_tree , gbdt_class_list_name , flags.verbose )
+    
+    if flags.verbose:
+        print_filename(out_file_name , "wrote schemed analysistree file (%d events, %.2f MB):"%(OutTree.GetEntries(),float(os.path.getsize(SchemedResultFileName)/1048576.0)))
+    
+    out_tree.Write()
     out_file.Close()
 
 
-
-
-
-
-
+#
+## -------------------------
+#def filter_analysistrees_to_gbdt_class( TracksListName , GBDTmodelName ,
+#                                       maxscore = 'protons', score = 0.99 ):
+#
+#    PassedGBDTFileRSEName = GBDTclassListName( GBDTmodelName, TracksListName, maxscore , score ,'rse')
+#    classified_tracks = pd.read_csv( PassedGBDTFileRSEName , sep=' ' , names=features_scores_rse)
+#    filename_prefix = anafiles_path + "/Tracks_" + TracksListName + "_AnalysisTrees"
+#    
+#    ana = TPlots( filename_prefix + ".root" , 'TracksTree' )
+#    all_tracks_tree = ana.GetTree()
+#    gbdt_classification = "maxscored_" + maxscore + "_score_%.2f"%score
+#    
+#    gbdt_analyzer = GBDTanalysis( all_tracks_tree , flags.verbose )
+#    
+#    out_file_name = filename_prefix + "_"  + gbdt_classification + ".root"
+#    out_file = ROOT.TFile( out_file_name ,"recreate")
+#    filtered_tree = all_tracks_tree.CloneTree(0)
+#    print 'initialized output tree'
+#    Nreduced = int(flags.evnts_frac*all_tracks_tree.GetEntries())
+#    for i in range(Nreduced):
+#        
+#        rse = gbdt_analyzer.GetRSE(i)
+#        
+#        if find_rse( rse , classified_tracks ):
+#            
+#            print 'found rse %d/%d/%d [%.2f'%(rse[0],rse[1],rse[2],100.*float(i)/Nreduced),"%]"
+#            
+#            filtered_tree.Fill()
+#
+#    print 'gbdt analyzer completed job'
+#    print_filename(out_file_name, "filtered %s (%d entries)"%(gbdt_classification,filtered_tree.GetEntries()) )
+#    filtered_tree.Write()
+#    out_file.Write()
+#    out_file.Close()
+#
+#
+#
+#
+#
+#
+#
 
 
 
