@@ -18,29 +18,29 @@ feature_names = [ # geometry
                  ]
 
 features_scores_rse = [
-                        'run','subrun','event','trackid'
-                       ,'mscore_p'     ,'mscore_mu'    ,'mscore_em'    ,'mscore_cos'
+                       'run','subrun','event','trackid'
+                       ,'mscore_p'    ,'mscore_mu'  ,'mscore_pi'    ,'mscore_em'    ,'mscore_cos'
                        ,'mscore_max'
-                        ]
+                       ]
 
 features_scores_roi = [
                        'run','subrun','event','trackid'
-                        ,'U_start_wire','U_start_time','U_end_wire','U_end_time'
-                        ,'V_start_wire','V_start_time','V_end_wire','V_end_time'
-                        ,'Y_start_wire','Y_start_time','Y_end_wire','Y_end_time'
-                        ,'mscore_p'     ,'mscore_mu'    ,'mscore_em'    ,'mscore_cos'
-                        ,'mscore_max'
+                       ,'U_start_wire','U_start_time','U_end_wire','U_end_time'
+                       ,'V_start_wire','V_start_time','V_end_wire','V_end_time'
+                       ,'Y_start_wire','Y_start_time','Y_end_wire','Y_end_time'
+                       ,'mscore_p'    ,'mscore_mu'  ,'mscore_pi'    ,'mscore_em'    ,'mscore_cos'
+                       ,'mscore_max'
                        ]
 
 
 features_multiscores_roi = [
-                        'run'           ,'subrun'       ,'event'        ,'trackid'
-                        ,'U_start_wire' ,'U_start_time' ,'U_end_wire'   ,'U_end_time'
-                        ,'V_start_wire' ,'V_start_time' ,'V_end_wire'   ,'V_end_time'
-                        ,'Y_start_wire' ,'Y_start_time' ,'Y_end_wire'   ,'Y_end_time'
-                        ,'mscore_p'     ,'mscore_mu'    ,'mscore_em'    ,'mscore_cos'
-                        ,'mscore_max'
-                        ]
+                            'run'           ,'subrun'       ,'event'        ,'trackid'
+                            ,'U_start_wire' ,'U_start_time' ,'U_end_wire'   ,'U_end_time'
+                            ,'V_start_wire' ,'V_start_time' ,'V_end_wire'   ,'V_end_time'
+                            ,'Y_start_wire' ,'Y_start_time' ,'Y_end_wire'   ,'Y_end_time'
+                            ,'mscore_p'    ,'mscore_mu'  ,'mscore_pi'    ,'mscore_em'    ,'mscore_cos'
+                            ,'mscore_max'
+                            ]
 
 
 
@@ -78,7 +78,7 @@ def GBDTclassListName( GBDTmodelName, DataListName, maxscore='protons' , score=0
     if score == 0:
         classified_list_full_name = classified_list_name + "_allscores"
     else:
-        classified_list_full_name = classified_list_name + "_score_%.2f"%p_score
+        classified_list_full_name = classified_list_name + "_score_%.2f"%score
     
     classified_list_full_name = classified_list_full_name + "_" + ListFeatures
 
@@ -355,14 +355,20 @@ def select_analysistrees_to_gbdt_class( TracksListName , GBDTmodelName ,
     tracks = pd.read_csv( allfeatures_filename )
     if ('proton' in maxscore):
         classified_tracks = tracks[tracks.mscore_max == 0]
+        classified_tracks = classified_tracks[classified_tracks.mscore_p > score ]
     elif ('muon' in maxscore):
         classified_tracks = tracks[tracks.mscore_max == 1]
+        classified_tracks = classified_tracks[classified_tracks.mscore_mu > score ]
     elif ('pion' in maxscore):
         classified_tracks = tracks[tracks.mscore_max == 2]
+        classified_tracks = classified_tracks[classified_tracks.mscore_pi > score ]
     elif ('em' in maxscore):
         classified_tracks = tracks[tracks.mscore_max == 3]
+        classified_tracks = classified_tracks[classified_tracks.mscore_em > score ]
     elif ('cosmic' in maxscore):
         classified_tracks = tracks[tracks.mscore_max == 4]
+        classified_tracks = classified_tracks[classified_tracks.mscore_cos > score ]
+
     print "read classified tracks max-scodes as ",maxscore
     PassedGBDTFileRSEName = GBDTclassListName( GBDTmodelName, TracksListName, maxscore , score ,'rse')
     PassedGBDTFileROIName = GBDTclassListName( GBDTmodelName, TracksListName, maxscore , score ,'roi')
@@ -407,70 +413,15 @@ def filter_analysistrees_to_gbdt_class( TracksListName , GBDTmodelName  , maxsco
     print_filename(gbdt_class_list_name , "rse list to scheme from: ")
 
     # output: schemed analysistree file
-    out_file_name = anafiles_path + "/Tracks_" + TracksListName + "_AnalysisTrees_"  + gbdt_classification + ".root"
+    out_file_name = anafiles_path + "/Tracks_" + TracksListName + "_AnalysisTrees_"  + GBDTmodelName + "_maxscore_" + maxscore + "_score_%.2f"%score + ".root"
     out_file = ROOT.TFile( out_file_name , "recreate" )
     out_tree = it.SchemeTreeRSEList( all_tracks_tree , gbdt_class_list_name , flags.verbose )
     
     if flags.verbose:
-        print_filename(out_file_name , "wrote schemed analysistree file (%d events, %.2f MB):"%(OutTree.GetEntries(),float(os.path.getsize(SchemedResultFileName)/1048576.0)))
+        print_filename(out_file_name , "wrote schemed analysistree file (%d events, %.2f MB):"%(out_tree.GetEntries(),float(os.path.getsize(out_file_name)/1048576.0)))
     
     out_tree.Write()
     out_file.Close()
-
-
-#
-## -------------------------
-#def filter_analysistrees_to_gbdt_class( TracksListName , GBDTmodelName ,
-#                                       maxscore = 'protons', score = 0.99 ):
-#
-#    PassedGBDTFileRSEName = GBDTclassListName( GBDTmodelName, TracksListName, maxscore , score ,'rse')
-#    classified_tracks = pd.read_csv( PassedGBDTFileRSEName , sep=' ' , names=features_scores_rse)
-#    filename_prefix = anafiles_path + "/Tracks_" + TracksListName + "_AnalysisTrees"
-#    
-#    ana = TPlots( filename_prefix + ".root" , 'TracksTree' )
-#    all_tracks_tree = ana.GetTree()
-#    gbdt_classification = "maxscored_" + maxscore + "_score_%.2f"%score
-#    
-#    gbdt_analyzer = GBDTanalysis( all_tracks_tree , flags.verbose )
-#    
-#    out_file_name = filename_prefix + "_"  + gbdt_classification + ".root"
-#    out_file = ROOT.TFile( out_file_name ,"recreate")
-#    filtered_tree = all_tracks_tree.CloneTree(0)
-#    print 'initialized output tree'
-#    Nreduced = int(flags.evnts_frac*all_tracks_tree.GetEntries())
-#    for i in range(Nreduced):
-#        
-#        rse = gbdt_analyzer.GetRSE(i)
-#        
-#        if find_rse( rse , classified_tracks ):
-#            
-#            print 'found rse %d/%d/%d [%.2f'%(rse[0],rse[1],rse[2],100.*float(i)/Nreduced),"%]"
-#            
-#            filtered_tree.Fill()
-#
-#    print 'gbdt analyzer completed job'
-#    print_filename(out_file_name, "filtered %s (%d entries)"%(gbdt_classification,filtered_tree.GetEntries()) )
-#    filtered_tree.Write()
-#    out_file.Write()
-#    out_file.Close()
-#
-#
-#
-#
-#
-#
-#
-
-
-
-
-
-
-
-
-
-
-
 
 
 

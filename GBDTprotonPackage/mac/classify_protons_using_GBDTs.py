@@ -16,10 +16,9 @@ from gbdt_tools import *
 TrainingDataType        = "MC_BNB"
 NumberOfTrainingEvents  = 300000
 TracksListName          = "BNB_5e19POT"
-GBDTmodelName           = "multi_BNB_TrainedOn_MCBNB_MCCOSMIC" # options: 'BNB_TrainedOn_only_MC_BNB'
-p_score                 = 0.1
-
-
+GBDTmodelName           = "multi_BNB_TrainedOn_MCBNB_MCCOSMIC"  # options: 'BNB_TrainedOn_only_MC_BNB'
+score                   = 0.9                                   # p_score = 0.0 for cosmics
+maxscore                = 'muons'
 
 
 
@@ -52,14 +51,14 @@ if flags.option=="compute all GBDT multiscore" or 'multiscore' in flags.option:
 if flags.option=="select GBDT protons" or 'select' in flags.option:
     
     #    select_gbdt_protons( TracksListName , GBDTmodelName , p_score )
-    select_analysistrees_to_gbdt_class( TracksListName , GBDTmodelName , maxscore = 'protons', score = 0 )
+    select_analysistrees_to_gbdt_class( TracksListName , GBDTmodelName , maxscore=maxscore, score = score )
 
 
 
 # -------------------------------------------------------------------
-if flags.option=="filter AnalysisTrees data file to selected protons" or 'filter' in flags.option:
+if flags.option=="filter AnalysisTrees data file to selected class" or 'filter' in flags.option:
     
-    filter_analysistrees_to_gbdt_class( TracksListName , GBDTmodelName , maxscore='protons', score = 0 )
+    filter_analysistrees_to_gbdt_class( TracksListName , GBDTmodelName , maxscore=maxscore, score = score )
 
 
 
