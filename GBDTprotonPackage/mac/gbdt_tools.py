@@ -383,7 +383,7 @@ def select_analysistrees_to_gbdt_class( TracksListName , GBDTmodelName ,
 # -------------------------
 def find_rse( rse , EventsList ):
     print rse[0] , rse[1], rse[2]
-    print EventsList['run'],EventsList['subrun'],EventsList['event']
+    print EventsList.run,EventsList.subrun,EventsList.event
     print zip(EventsList['run'],EventsList['subrun'],EventsList['event'])
     for r,s,e in zip(EventsList['run'],EventsList['subrun'],EventsList['event']):
         if r == rse[0] and s == rse[1] and e == rse[2]:
