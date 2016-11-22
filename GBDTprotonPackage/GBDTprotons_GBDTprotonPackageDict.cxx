@@ -56,7 +56,7 @@ namespace ROOT {
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::GBDTanalysis));
       static ::ROOT::TGenericClassInfo 
          instance("GBDTanalysis", "GBDTanalysis.h", 25,
-                  typeid(::GBDTanalysis), DefineBehavior(ptr, ptr),
+                  typeid(::GBDTanalysis), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &GBDTanalysis_Dictionary, isa_proxy, 4,
                   sizeof(::GBDTanalysis) );
       instance.SetDelete(&delete_GBDTanalysis);
@@ -108,12 +108,12 @@ namespace {
 "/Users/erezcohen/larlite/UserDev/MyLarLite/MyPackage",
 "/Users/erezcohen/larlite/UserDev/AnalysisTreesInformation/AnaTreesPackage",
 "/Users/erezcohen/larlite/core",
-"/Users/erezcohen/root6/root-6.04.10/include",
+"/usr/local/Cellar/root6/6.06.02/include/root",
 "/Users/erezcohen/larlite/UserDev/GBDTprotons/GBDTprotonPackage/",
 0
     };
-    static const char* fwdDeclCode = 
-R"DICTFWDDCLS(
+    static const char* fwdDeclCode = R"DICTFWDDCLS(
+#line 1 "libGBDTprotons_GBDTprotonPackage dictionary forward declarations' payload"
 #pragma clang diagnostic ignored "-Wkeyword-compat"
 #pragma clang diagnostic ignored "-Wignored-attributes"
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
@@ -121,6 +121,7 @@ extern int __Cling_Autoloading_Map;
 class __attribute__((annotate("$clingAutoload$GBDTanalysis.h")))  GBDTanalysis;
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
+#line 1 "libGBDTprotons_GBDTprotonPackage dictionary payload"
 
 #ifndef G__VECTOR_HAS_CLASS_ITERATOR
   #define G__VECTOR_HAS_CLASS_ITERATOR 1
