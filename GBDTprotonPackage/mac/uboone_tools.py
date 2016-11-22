@@ -37,6 +37,9 @@ elif flags.worker=="uboone":
     lists_path = "/uboone/data/users/ecohen/Lists"
 
 
+# larlite files
+data_files_path = "/uboone/data/users/ecohen/DATA"
+
 # analysis trees
 anatrees_lists_path = "/pnfs/uboone/persistent/users/aschu/devel/v05_11_01/hadd"
 anatrees_data_path  = "/uboone/data/users/ecohen/AnalysisTreeData"
