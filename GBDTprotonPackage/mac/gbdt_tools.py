@@ -89,6 +89,10 @@ def FeaturesFileName( FileType ):
     
     return main_path + "/FeaturesFiles/features_" + FileType + "_AnalysisTrees.csv"
 
+# -------------------------
+def FullFeaturesFileName( FileType ):
+    
+    return main_path + "/FeaturesFiles/full_features_" + FileType + "_AnalysisTrees.csv"
 
 # -------------------------
 def TrainingSampleFileName( FileTypeToDivide , NumberOfEventsToTrain ):
@@ -299,8 +303,8 @@ def calc_all_gbdt_scores( TracksListName , GBDTmodelName ):
 
 # -------------------------
 def calc_all_gbdt_multiscores( TracksListName , GBDTmodelName ):
-    if flags.verbose: print_important( 'calc all gbdt multiscores' )
-    SampleFileName = FeaturesFileName( TracksListName )
+    if flags.verbose: print_important( 'compute all gbdt multiscores' )
+    SampleFileName = FullFeaturesFileName( TracksListName )
     if flags.verbose: print_filename( SampleFileName , "loading data from" )
     
     # create a directory for the results of classifying from this GBDT model

@@ -35,15 +35,14 @@ if flags.option=="train GBDTs cross validation" or 'train' in flags.option:
 
 
 # -------------------------------------------------------------------
-if flags.option=="compute all GBDT p-scores" or 'scores' in flags.option:
+if flags.option=="compute all GBDT p-scores" or 'p-scores' in flags.option:
     # for cosmic tracks classification - single-class classifier
     calc_all_gbdt_scores( TracksListName , GBDTmodelName )
 
 
 # -------------------------------------------------------------------
 if flags.option=="compute all GBDT multiscore" or 'multiscore' in flags.option:
-    # for cosmic tracks classification - multi-class classifier
-    # scores for muon , pion , proton , electron/photon
+    # for BNB tracks classification - multi-class classifier:  muon , pion , proton , em (electron/photon)
     calc_all_gbdt_multiscores( TracksListName , GBDTmodelName )
 
 
