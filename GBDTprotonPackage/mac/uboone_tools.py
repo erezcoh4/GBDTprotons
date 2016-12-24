@@ -47,6 +47,7 @@ anatrees_data_path  = "/uboone/data/users/ecohen/AnalysisTreeData"
 # my analysis files
 anafiles_path       = main_path + "/TracksAnaFiles"
 featuresfiles_path  = main_path + "/FeaturesFiles"
+rois_path           = main_path + "/ROIs"
 
 # gdbts
 GBDTmodels_path         = main_path + "/GBDTmodels"
