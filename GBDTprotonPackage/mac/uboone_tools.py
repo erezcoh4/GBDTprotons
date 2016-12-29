@@ -20,25 +20,27 @@ from my_tools import *
 
 # main paths
 if flags.worker=="erez":
+    path = "/Users/erezcohen/Desktop/uBoone"
+    main_path       = path + "/AnalysisTreesAna"
+    lists_path      = path + "/Lists"
+    data_files_path = path + "/DATA"
+    ana_files_path  = path + "/analysis/AnaFiles"
     
-    main_path = "/Users/erezcohen/Desktop/uBoone/AnalysisTreesAna"
-    lists_path = "/Users/erezcohen/Desktop/uBoone/Lists"
-    import pylab
-    import numpy as np
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
-    import boost_cosmic , predict_cosmic
-    import predict_multi
+    import pylab , csv , numpy as np, pandas as pd
+    import matplotlib.pyplot as plt, matplotlib.ticker as ticker
+    import boost_cosmic , predict_cosmic, predict_multi
 
 elif flags.worker=="uboone":
+    app_path  = "/uboone/app/users/ecohen"
+    main_path       = app_path + "/AnalysisTreesAna"
+    data_path = "/uboone/data/users/ecohen"
+    lists_path      = data_path + "/Lists"
+    data_files_path = data_path + "/DATA"
+    ana_files_path  = data_path + "/analysis/AnaFiles"
+    
     import csv
-    main_path = "/uboone/app/users/ecohen/AnalysisTreesAna"
-    lists_path = "/uboone/data/users/ecohen/Lists"
 
 
-# larlite files
-data_files_path = "/uboone/data/users/ecohen/DATA"
 
 # analysis trees
 anatrees_lists_path = "/pnfs/uboone/persistent/users/aschu/devel/v05_11_01/hadd"
