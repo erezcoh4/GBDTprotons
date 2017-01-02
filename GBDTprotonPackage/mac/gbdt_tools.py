@@ -44,9 +44,20 @@ features_multiscores_roi = [
 
 
 
-
-
-
+''' 
+    how to run the GBDTs chain?
+    -----------------------------
+    (1) extract MC tracks information
+    python $AnalysisTreesAna/mac/muon_proton_id.py  --option=extractMC
+    python $AnalysisTreesAna/mac/muon_proton_id.py  --option=extract_MCCORSIKA
+    
+    (2) train
+    
+    (3) extract data tracks information
+    python $AnalysisTreesAna/mac/muon_proton_id.py  --option=extractDATA
+    
+    (4) apply - predict
+'''
 
 
 
