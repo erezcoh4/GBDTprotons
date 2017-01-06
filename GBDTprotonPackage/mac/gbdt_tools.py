@@ -44,9 +44,20 @@ features_multiscores_roi = [
 
 
 
-
-
-
+''' 
+    how to run the GBDTs chain?
+    -----------------------------
+    (1) extract MC tracks information
+    python $AnalysisTreesAna/mac/muon_proton_id.py  --option=extractMC
+    python $AnalysisTreesAna/mac/muon_proton_id.py  --option=extract_CORSIKA
+    
+    (2) train
+    
+    (3) extract data tracks information
+    python $AnalysisTreesAna/mac/muon_proton_id.py  --option=extractDATA
+    
+    (4) apply - predict
+'''
 
 
 
@@ -123,7 +134,7 @@ def divide_training_and_testing_samples( FileTypeToDivide , NumberOfEventsToTrai
     # FileTypeToDivide: MC_BNB , openCOSMIC_MC
     import random
     
-    data = pd.read_csv( FeaturesFileName( FileTypeToDivide ) )
+    data = pd.read_csv( FullFeaturesFileName( FileTypeToDivide ) )
     Total = len(data)
     TrainFileName = TrainingSampleFileName( FileTypeToDivide , NumberOfEventsToTrain )
     TestFileName = TestSampleFileName( FileTypeToDivide , Total - NumberOfEventsToTrain )
@@ -277,6 +288,136 @@ def train_gbdt_cross_validation( FileTypeToDivide , NumberOfEventsToTrain ):
 
     print "see \n" + model_path + "/README_" + ModelName
     print "and \n" + model_path + "/importances_" + ModelName + ".pdf"
+
+
+
+
+
+# -------------------------------------------------------------------
+def train_gbdt_MCBNB_and_CORSIKA( data_type_arr , nevents_train_arr ):
+    
+    '''
+        Parameters: data_type_arr: ndarray
+                    array of data types to train on, MC-BNB and CORSIKA-MC
+                    
+                    nevents_train_arr: ndarray
+                    number of events to train form in each sample
+                    
+        Returns:    bdt_model: xgb.train
+                    gdbt model
+        '''
+    
+    import boost_multiscore
+    
+    for data,nevnts in zip(data_type_arr,nevents_train_arr):
+        train_filename = TrainingSampleFileName( data , nevnts )
+        print_filename( train_filename , "input: traininig sample file" )
+
+    
+    DoCrossValidation = yesno('cross validate?')
+
+    # (A) load the data
+    # ---------------------------------------
+    data,label,weight = boost_multi.load_data( TrainingSampleName , feature_names )
+#
+#    
+#    if flags.verbose:
+#        print "data: \n",data
+#        print "label: \n",label
+#        print "weight: \n",weight
+#
+#
+#
+#    # (B) cross-validation step
+#    # ---------------------------------------
+#    if DoCrossValidation:
+#        test_error,test_falsepos,test_falseneg,scores = boost_cosmic.run_cv( data , label , weight , param )
+#        
+#        if flags.verbose:
+#            print "test_error: \n",test_error
+#            print "test_falsepos: \n",test_falsepos
+#            print "test_falseneg: \n",test_falseneg
+#            print "scores: \n",scores
+#    
+#        # (C) check if errors are stable
+#        # ---------------------------------------
+#        plt.figure()
+#        plt.hist( test_error )
+#        plt.title("test errors")
+#        plt.xlabel("error")
+#        plt.ylabel("Frequency")
+#        plt.savefig( model_path + "/test_errors_" + ModelName + ".pdf" )
+#        plt.show()
+#        
+#            DoContinue = yesno('build model?')
+#
+#    if DoCrossValidation == False: DoContinue = True
+#    # (D) build the GBDTs which is training on the entire
+#    # training sample, with no boot-strapping
+#    # ---------------------------------------
+#    if DoContinue:
+#        
+#        BoostedTree = boost_cosmic.make_bdt( data , label , weight , param )
+#        BoostedTree.save_model( model_path + "/" + ModelName + ".bst")
+#        
+#        if flags.verbose:
+#            print "done"
+#            print "BoostedTree: \n",BoostedTree
+#            print "now use the test sample and test this"
+#
+#
+#
+#
+#    # plot the importances...
+#    importances_fig = boost_cosmic.plot_importances(BoostedTree).figure
+#    importances_fig.savefig( model_path + "/importances_" + ModelName + ".pdf" )
+#    importances_fig.show()
+#    
+#    
+#    
+#    file = open ( model_path + "/README_" + ModelName   , "wb" )
+#    
+#    string = "\nGBDT modeling \n--------------------- \n"
+#    string+= ("built the model to \n " + model_path + "/" + ModelName + ".bst") if DoContinue else "did not built the model..."
+#    string+= "\n%4d-%02d-%02d"       %time.localtime()[0:3]
+#    string+= "\n--------------------- \n"
+#    string+= "\nmodel: "             +ModelName
+#    string+= "\nobjective: "         +param['objective']
+#    string+= "\neta: "               +str(param['eta'])
+#    string+= "\neval_metric: "       +str(param['eval_metric'])
+#    string+= "\nsilent: "            +str(param['silent'])
+#    string+= "\nnthread: "           +str(param['nthread'])
+#    string+= "\nmin_child_weight: "  +str(param['min_child_weight'])
+#    string+= "\nmax_depth: "         +str(param['max_depth'])
+#    string+= "\ngamma: "             +str(param['gamma'])
+#    string+= "\ncolsample_bytree: "  +str(param['colsample_bytree'])
+#    string+= "\nsubsample: "         +str(param['subsample'])
+#    string+= "\nNtrees: "            +str(param['Ntrees'])
+#    string+= "\nNfolds: "            +str(param['Nfolds'])
+#    string+= "\n--------------------- \n"
+#    if DoCrossValidation:
+#        string+= "\terrors:\n"
+#        string+= str(test_error[:])
+#        string+= "\n--------------------- \n"
+#        string+= "false-positive: \n"
+#        string+=  str(test_falsepos[:])
+#        string+= "\n--------------------- \n"
+#        string+= "false-negative: \n"
+#        string+=  str(test_falseneg[:])
+#    string+= "\n--------------------- \n"
+#
+#    file.write(string)
+#    
+#    print "done,"
+#    
+#    if DoContinue:
+#        print "built the model to \n" + model_path + "/" + ModelName + ".bst"
+#    else:
+#        print "did not built the model"
+#    
+#        print "see \n" + model_path + "/README_" + ModelName
+#        print "and \n" + model_path + "/importances_" + ModelName + ".pdf"
+    print 'done training... continue with predicting on tracks...'
 
 
 
