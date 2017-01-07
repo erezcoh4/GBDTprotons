@@ -13,6 +13,11 @@ from ROOT import TPlots
 from my_tools import *
 
 
+# --------------------------------------------------
+#                       globals
+# --------------------------------------------------
+debug = flags.verbose
+
 
 # --------------------------------------------------
 #                       paths
@@ -28,7 +33,9 @@ if flags.worker=="erez":
     
     import pylab , csv , numpy as np, pandas as pd
     import matplotlib.pyplot as plt, matplotlib.ticker as ticker
-    import boost_cosmic , predict_cosmic, predict_multi
+    import boost_cosmic , predict_cosmic, predict_multi , boost_multiscore
+    from prompter import yesno
+
 
 elif flags.worker=="uboone":
     app_path  = "/uboone/app/users/ecohen"

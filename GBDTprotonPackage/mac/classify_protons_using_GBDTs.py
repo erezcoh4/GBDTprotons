@@ -14,8 +14,8 @@ from gbdt_tools import *
 '''
 
 
-TrainingDataType        = 'MC_BNB'                              # options: 'openCOSMIC_MC' , 'MC_BNB'
-NumberOfTrainingEvents  = 300000                                # 'openCOSMIC_MC': 200000 , 'MC_BNB': 300000
+TrainingDataType        = 'openCOSMIC_MC'                              # options: 'openCOSMIC_MC' , 'MC_BNB'
+NumberOfTrainingEvents  = 200000                                # 'openCOSMIC_MC': 200000 , 'MC_BNB': 300000
 TracksListName          = "BNB_5e19POT"
 GBDTmodelName           = "multi_BNB_TrainedOn_MCBNB_MCCOSMIC"  # options: 'BNB_TrainedOn_only_MC_BNB'
 score                   = 0.9                                   # p_score = 0.0 for cosmics

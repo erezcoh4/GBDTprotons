@@ -307,18 +307,19 @@ def train_gbdt_MCBNB_and_CORSIKA( data_type_arr , nevents_train_arr ):
                     gdbt model
         '''
     
-    import boost_multiscore
-    
+    train_filename = []
     for data,nevnts in zip(data_type_arr,nevents_train_arr):
-        train_filename = TrainingSampleFileName( data , nevnts )
-        print_filename( train_filename , "input: traininig sample file" )
+        train_filename.append(TrainingSampleFileName( data , nevnts ))
+        print_filename( train_filename[-1] , "input: traininig sample file" )
 
     
-    DoCrossValidation = yesno('cross validate?')
+#    do_cross_validation = yesno('cross validate?')
 
     # (A) load the data
     # ---------------------------------------
-    data,label,weight = boost_multi.load_data( TrainingSampleName , feature_names )
+
+    data,label,weight = boost_multiscore.load_data( train_filename[0] , train_filename[1] ,
+                                                   debug=debug , feature_names=feature_names )
 #
 #    
 #    if flags.verbose:

@@ -6,36 +6,60 @@ import xgboost as xgb
 from sklearn.cross_validation import StratifiedKFold
 
 # -------------------------------------------------------------------
-def load_data():
+def load_data(  bnb_mc_filename, corsika_mc_filename
+              , KE_min=0.04 #  take only protons with kinetic energy > 40 MeV (momentum 277 MeV/c); Katherine takes 40 MeV (277 MeV/c)
+              , debug=0
+              , feature_names=None
+              ):
+
+    mc_bnb_tracks = pd.read_csv(bnb_mc_filename)
+    mc_bnb_protons  = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==2212) & (mc_bnb_tracks.truth_KE>=KE_min)][feature_names]
+    mc_bnb_pions    = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==211) | (mc_bnb_tracks.MCpdgCode==-211) | (mc_bnb_tracks.MCpdgCode==111)][feature_names]
+    mc_bnb_em       = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==11) | (mc_bnb_tracks.MCpdgCode==-11) | (mc_bnb_tracks.MCpdgCode==22)][feature_names]
+    mc_bnb_muons    = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==13) | (mc_bnb_tracks.MCpdgCode==-13)][feature_names]
+
+    corsika_mc_tracks = pd.read_csv(corsika_mc_filename)[feature_names]
+    if debug>1:
+        print 'read ',bnb_mc_filename
+        print len(mc_bnb_protons),'protons,',len(mc_bnb_pions),'pions,',len(mc_bnb_muons),'muons,',len(mc_bnb_em),'em'
+        print len(corsika_mc_tracks),'cosmic tracks'
+#    print 'read ',corsika_cm_filename
+#    mc_bnb_pions = mc_bnb_tracks[mc_bnb_tracks.MCpdgCode==2212]
+#    mc_bnb_protons = mc_bnb_tracks[mc_bnb_tracks.MCpdgCode==2212]
+#    mc_bnb_protons = mc_bnb_tracks[mc_bnb_tracks.MCpdgCode==2212]
 
     # use pandas to import csvs
-    data_p1 = pd.read_csv('data/bnb/featuresana_bnbmc_july_p_primary.csv')
-    data_p1 = data_p1[data_p1.mckinetic >= 0.04]
-    data_m1 = pd.read_csv('data/bnb/featuresana_bnbmc_july_mu.csv')
-    data_i1 = pd.read_csv('data/bnb/featuresana_bnbmc_july_pi.csv')
-    data_e1 = pd.read_csv('data/bnb/featuresana_bnbmc_july_em.csv')
-    #data_d1 = pd.read_csv('data/bnb/featuresana_bnbmc_july_k.csv')
-    data_c1 = pd.read_csv('data/cosmic/featuresana_bnbext_6000_july.csv')
+#    data_p1 = pd.read_csv('data/bnb/featuresana_bnbmc_july_p_primary.csv')
+#    data_p1 = data_p1[data_p1.mckinetic >= 0.04]
+#    data_m1 = pd.read_csv('data/bnb/featuresana_bnbmc_july_mu.csv')
+#    data_i1 = pd.read_csv('data/bnb/featuresana_bnbmc_july_pi.csv')
+#    data_e1 = pd.read_csv('data/bnb/featuresana_bnbmc_july_em.csv')
+#    #data_d1 = pd.read_csv('data/bnb/featuresana_bnbmc_july_k.csv')
+#    data_c1 = pd.read_csv('data/cosmic/featuresana_bnbext_6000_july.csv')
 
-    # pull out features we want to use now
-    feature_names = ['nhits','length','starty','startz','endy','endz','theta','phi',
-                     'distlenratio','startdqdx','enddqdx','dqdxdiff','dqdxratio',
-                     'totaldqdx','averagedqdx','cosmicscore','coscontscore',
-                     'pidpida','pidchi','cfdistance']
-    data_p = data_p1[feature_names]
-    data_m = data_m1[feature_names]
-    data_i = data_i1[feature_names]
-    data_e = data_e1[feature_names]
-    data_c = data_c1[feature_names]
+#    # pull out features we want to use now
+#    feature_names = ['nhits','length','starty','startz','endy','endz','theta','phi',
+#                     'distlenratio','startdqdx','enddqdx','dqdxdiff','dqdxratio',
+#                     'totaldqdx','averagedqdx','cosmicscore','coscontscore',
+#                     'pidpida','pidchi','cfdistance']
+#    data_p = data_p1[feature_names]
+#    data_m = data_m1[feature_names]
+#    data_i = data_i1[feature_names]
+#    data_e = data_e1[feature_names]
+#    data_c = data_c1[feature_names]
 
     # make training array
-    X0 = np.array(data_p)
-    X1 = np.array(data_m)
-    X2 = np.array(data_i)
-    X3 = np.array(data_e)
-    X4 = np.array(data_c)
+    X0 = np.array(mc_bnb_protons)
+    X1 = np.array(mc_bnb_muons)
+    X2 = np.array(mc_bnb_pions)
+    X3 = np.array(mc_bnb_em)
+    X4 = np.array(corsika_mc_tracks)
     data  = np.vstack([X0,X1,X2,X3,X4])
+    if debug:
+        print 'data:',data
+    return
 
+    # different weighting! continue here!
     # make class labels
     y0 = np.zeros(len(X0))
     y1 = np.ones(len(X1))
@@ -54,6 +78,13 @@ def load_data():
 
     return data,label,weight
 
+
+
+
+
+
+
+# -------------------------------------------------------------------
 def parameter_opt(data,label,weight):
     # setup parameters for xgboost
     param = {}
