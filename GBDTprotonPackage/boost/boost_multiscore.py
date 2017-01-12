@@ -10,76 +10,105 @@ def load_data(  bnb_mc_filename, corsika_mc_filename
               , KE_min=0.04 #  take only protons with kinetic energy > 40 MeV (momentum 277 MeV/c); Katherine takes 40 MeV (277 MeV/c)
               , debug=0
               , feature_names=None
+              , tracks_frac=1
               ):
 
     mc_bnb_tracks = pd.read_csv(bnb_mc_filename)
+    mc_bnb_tracks = mc_bnb_tracks[0:int(tracks_frac*len(mc_bnb_tracks))] # take only a fraction of the tracks for small-scale training on my machine
+    
     mc_bnb_protons  = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==2212) & (mc_bnb_tracks.truth_KE>=KE_min)][feature_names]
     mc_bnb_pions    = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==211) | (mc_bnb_tracks.MCpdgCode==-211) | (mc_bnb_tracks.MCpdgCode==111)][feature_names]
     mc_bnb_em       = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==11) | (mc_bnb_tracks.MCpdgCode==-11) | (mc_bnb_tracks.MCpdgCode==22)][feature_names]
     mc_bnb_muons    = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==13) | (mc_bnb_tracks.MCpdgCode==-13)][feature_names]
 
-    corsika_mc_tracks = pd.read_csv(corsika_mc_filename)[feature_names]
+    corsika_mc_tracks = pd.read_csv(corsika_mc_filename)
+    corsika_mc_tracks = corsika_mc_tracks[0:int(tracks_frac*len(corsika_mc_tracks))] # take only a fraction of the tracks for small-scale training on my machine
+    
+    corsika_mc_tracks = corsika_mc_tracks[feature_names]
+    
     if debug>1:
-        print 'read ',bnb_mc_filename
+        print 'took only a fraction of',tracks_frac,'of tracks from MC-BNB and CORSIKA samples:'
         print len(mc_bnb_protons),'protons,',len(mc_bnb_pions),'pions,',len(mc_bnb_muons),'muons,',len(mc_bnb_em),'em'
         print len(corsika_mc_tracks),'cosmic tracks'
-#    print 'read ',corsika_cm_filename
-#    mc_bnb_pions = mc_bnb_tracks[mc_bnb_tracks.MCpdgCode==2212]
-#    mc_bnb_protons = mc_bnb_tracks[mc_bnb_tracks.MCpdgCode==2212]
-#    mc_bnb_protons = mc_bnb_tracks[mc_bnb_tracks.MCpdgCode==2212]
 
-    # use pandas to import csvs
-#    data_p1 = pd.read_csv('data/bnb/featuresana_bnbmc_july_p_primary.csv')
-#    data_p1 = data_p1[data_p1.mckinetic >= 0.04]
-#    data_m1 = pd.read_csv('data/bnb/featuresana_bnbmc_july_mu.csv')
-#    data_i1 = pd.read_csv('data/bnb/featuresana_bnbmc_july_pi.csv')
-#    data_e1 = pd.read_csv('data/bnb/featuresana_bnbmc_july_em.csv')
-#    #data_d1 = pd.read_csv('data/bnb/featuresana_bnbmc_july_k.csv')
-#    data_c1 = pd.read_csv('data/cosmic/featuresana_bnbext_6000_july.csv')
-
-#    # pull out features we want to use now
-#    feature_names = ['nhits','length','starty','startz','endy','endz','theta','phi',
-#                     'distlenratio','startdqdx','enddqdx','dqdxdiff','dqdxratio',
-#                     'totaldqdx','averagedqdx','cosmicscore','coscontscore',
-#                     'pidpida','pidchi','cfdistance']
-#    data_p = data_p1[feature_names]
-#    data_m = data_m1[feature_names]
-#    data_i = data_i1[feature_names]
-#    data_e = data_e1[feature_names]
-#    data_c = data_c1[feature_names]
 
     # make training array
-    X0 = np.array(mc_bnb_protons)
-    X1 = np.array(mc_bnb_muons)
-    X2 = np.array(mc_bnb_pions)
-    X3 = np.array(mc_bnb_em)
-    X4 = np.array(corsika_mc_tracks)
-    data  = np.vstack([X0,X1,X2,X3,X4])
-    if debug:
-        print 'data:',data
-    return
+    x_protons   = np.array(mc_bnb_protons)
+    x_muons     = np.array(mc_bnb_muons)
+    x_pions     = np.array(mc_bnb_pions)
+    x_em        = np.array(mc_bnb_em)
+    x_cosmic    = np.array(corsika_mc_tracks)
+    data        = np.vstack([x_protons,x_muons,x_pions,x_em,x_cosmic])
+    if debug>2: print 'data:',data
 
-    # different weighting! continue here!
+
     # make class labels
-    y0 = np.zeros(len(X0))
-    y1 = np.ones(len(X1))
-    y2 = np.ones(len(X2))*2
-    y3 = np.ones(len(X3))*3
-    y4 = np.ones(len(X4))*4
-    label  = np.hstack([y0,y1,y2,y3,y4])
+    y_protons   = np.zeros(len(x_protons))
+    y_muons     = np.ones(len(x_muons))
+    y_pions     = np.ones(len(x_pions))*2
+    y_em        = np.ones(len(x_em))*3
+    y_cosmics   = np.ones(len(x_cosmic))*4
+    label       = np.hstack([y_protons,y_muons,y_pions,y_em,y_cosmics])
+    if debug>2: print 'label:',label
+
 
     # make weights
-    w0 = np.ones(len(y0))*1.
-    w1 = np.ones(len(y1))*np.true_divide(len(y0),len(y1))
-    w2 = np.ones(len(y2))*np.true_divide(len(y0),len(y2))
-    w3 = np.ones(len(y3))*np.true_divide(len(y0),len(y3))
-    w4 = np.ones(len(y4))*np.true_divide(len(y0),len(y4))
-    weight = np.hstack([w0,w1,w2,w3,w4])
+    w_protons   = np.ones(len(y_protons))   * 1.
+    w_muons     = np.ones(len(y_muons))     * np.true_divide(len(y_protons),len(y_muons)) # true_divide Returns a true division of the inputs, element-wise.
+    w_pions     = np.ones(len(y_pions))     * np.true_divide(len(y_protons),len(y_pions))
+    w_em        = np.ones(len(y_em))        * np.true_divide(len(y_protons),len(y_em))
+    w_cosmics   = np.ones(len(y_cosmics))   * np.true_divide(len(y_protons),len(y_cosmics))
+    weight      = np.hstack([w_protons,w_muons,w_pions,w_em,w_cosmics])
+    if debug>2: print 'weight:',weight
 
     return data,label,weight
+# -------------------------------------------------------------------
 
 
-
+# -------------------------------------------------------------------
+def run_cv( data , label , weight , parameters):
+    
+    # use logistic regression loss, use raw prediction before logistic transformation
+    # since we only need the rank
+    # cosmic data parameters
+    parameters['objective']     = 'multi:softprob'
+    parameters['eval_metric']   = 'merror'
+    # you can directly throw param in, though we want to watch multiple metrics here
+    plst  = list(parameters.items())+[('eval_metric', 'mlogloss')]
+    
+    num_round   = 855
+    test_error  , test_falsepos , test_falseneg = [] , [] , []
+    scores      = np.zeros((6,len(label)))
+    
+    # get folds
+    skf = StratifiedKFold(label, 10, shuffle=True)
+    for i, (train, test) in enumerate(skf):
+        print 'On fold {}'.format(i)
+        #print train, test
+        Xtrain = data[train]
+        ytrain = label[train]
+        wtrain = label[train]
+        Xtest  = data[test]
+        ytest  = label[test]
+        wtest  = label[test]
+        # make dmatrices from xgboost
+        dtrain = xgb.DMatrix( Xtrain, label=ytrain, weight=weight , missing=np.nan )
+        dtest  = xgb.DMatrix( Xtest , missing=np.nan )
+        
+        bst   = xgb.train(plst, dtrain, num_round)
+        ypred = bst.predict(dtest)
+        fold_error,fold_falsepos,fold_falseneg = compute_stats(ytest,ypred)
+        test_error.append(fold_error)
+        test_falsepos.append(fold_falsepos)
+        test_falseneg.append(fold_falseneg)
+        
+        # 5 classes - 5 scores
+        for i in range(5):
+            scores[i,test] = ypred[:,i]
+        scores[5,test] = ytest
+    
+    return test_error,test_falsepos,test_falseneg,scores
+# -------------------------------------------------------------------
 
 
 
@@ -128,78 +157,7 @@ def parameter_opt(data,label,weight):
     return results
 
 
-def run_cv(data,label,weight):
 
-    # configure weights
-    #weight = np.ones(len(data))
-    #sum_wpos = sum( weight[i] for i in range(len(label)) if label[i] == 1.0  )
-    #sum_wneg = sum( weight[i] for i in range(len(label)) if label[i] == 0.0  )
-
-    # print weight statistics
-    #print ('weight statistics: wpos=%g, wneg=%g, ratio=%g' % ( sum_wpos, sum_wneg, sum_wpos/sum_wneg))
-    #wp = len(np.where(label == 1)[0])
-    #wd = len(np.where(label == 0)[0])
-
-    # setup parameters for xgboost
-    param = {}
-    # use logistic regression loss, use raw prediction before logistic transformation
-    # since we only need the rank
-    # cosmic data parameters
-    param['objective'] = 'multi:softprob'
-    # scale weight of positive examples
-    #param['scale_pos_weight'] = 3.*np.true_divide(wd,wp)
-    #print 'Scale pos. weight: {}'.format(3.*np.true_divide(wd,wp))
-    #param['scale_pos_weight'] = 100.*sum_wpos/sum_wneg
-    param['eta']               = 0.025
-    param['eval_metric']       = 'merror'
-    param['silent']            = 1
-    param['nthread']           = 6
-    param['min_child_weight']  = 4
-    param['max_depth']         = 13
-    param['gamma']             = 0.7
-    param['colsample_bytree']  = 0.5
-    param['subsample']         = 0.8
-    #param['reg_alpha']         = 1e-5
-    param['num_class']         = 5
-
-    # you can directly throw param in, though we want to watch multiple metrics here
-    plst = list(param.items())+[('eval_metric', 'mlogloss')]
-    #plst = list(param.items())
-
-    # boost 25 tres
-    num_round = 855
-
-    test_error    = []
-    test_falsepos = []
-    test_falseneg = []
-    scores        = np.zeros((6,len(label)))
-
-    # get folds
-    skf = StratifiedKFold(label, 10, shuffle=True)
-    for i, (train, test) in enumerate(skf):
-        print 'On fold {}'.format(i)
-        #print train, test
-        Xtrain = data[train]
-        ytrain = label[train]
-        wtrain = label[train]
-        Xtest  = data[test]
-        ytest  = label[test]
-        wtest  = label[test]
-        # make dmatrices from xgboost
-        dtrain = xgb.DMatrix( Xtrain, label=ytrain, weight=weight )
-        dtest  = xgb.DMatrix( Xtest )
-
-        bst   = xgb.train(plst, dtrain, num_round)
-        ypred = bst.predict(dtest)
-        fold_error,fold_falsepos,fold_falseneg = compute_stats(ytest,ypred)
-        test_error.append(fold_error)
-        test_falsepos.append(fold_falsepos)
-        test_falseneg.append(fold_falseneg)
-        for i in range(5):
-            scores[i,test] = ypred[:,i]
-        scores[5,test] = ytest
-
-    return test_error,test_falsepos,test_falseneg,scores
 
 def compute_stats(ytest,ypred):
   

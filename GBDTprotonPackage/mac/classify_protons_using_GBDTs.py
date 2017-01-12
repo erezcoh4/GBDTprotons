@@ -14,7 +14,7 @@ from gbdt_tools import *
 '''
 
 
-TrainingDataType        = 'openCOSMIC_MC'                              # options: 'openCOSMIC_MC' , 'MC_BNB'
+TrainingDataType        = 'openCOSMIC_MC'                       # options: 'openCOSMIC_MC' , 'MC_BNB'
 NumberOfTrainingEvents  = 200000                                # 'openCOSMIC_MC': 200000 , 'MC_BNB': 300000
 TracksListName          = "BNB_5e19POT"
 GBDTmodelName           = "multi_BNB_TrainedOn_MCBNB_MCCOSMIC"  # options: 'BNB_TrainedOn_only_MC_BNB'
@@ -32,6 +32,7 @@ parameters = {  'debug':flags.verbose,
                 'gamma':0.7,
                 'colsample_bytree':0.5,
                 'subsample':0.8,
+                'num_class':5,
                 'Ntrees':500,
                 'Nfolds':10,
 #                'reg_alpha':1e-5
@@ -48,7 +49,7 @@ if flags.option=="divide training and testing samples" or 'divide' in flags.opti
 if flags.option=="train GBDTs cross validation" or 'train' in flags.option:
     
     #    train_gbdt_cross_validation( TrainingDataType , NumberOfTrainingEvents )
-    train_gbdt_MCBNB_and_CORSIKA( ['MC_BNB','openCOSMIC_MC'] , [300000,200000] )
+    train_gbdt_MCBNB_and_CORSIKA( data_type_arr=['MC_BNB','openCOSMIC_MC'] , nevents_train_arr=[300000,200000] , parameters=parameters )
 
 
 # -------------------------------------------------------------------
