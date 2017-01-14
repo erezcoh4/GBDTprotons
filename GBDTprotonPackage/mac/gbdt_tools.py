@@ -294,7 +294,7 @@ def train_gbdt_cross_validation( FileTypeToDivide , NumberOfEventsToTrain ):
 
 
 # -------------------------------------------------------------------
-def train_gbdt_MCBNB_and_CORSIKA( data_type_arr , nevents_train_arr ):
+def train_gbdt_MCBNB_and_CORSIKA( data_type_arr=None , nevents_train_arr=None , parameters=None , tracks_frac=1):
     
     '''
         Parameters: data_type_arr: ndarray
@@ -313,33 +313,32 @@ def train_gbdt_MCBNB_and_CORSIKA( data_type_arr , nevents_train_arr ):
         print_filename( train_filename[-1] , "input: traininig sample file" )
 
     
-#    do_cross_validation = yesno('cross validate?')
+
 
     # (A) load the data
     # ---------------------------------------
 
-    data,label,weight = boost_multiscore.load_data( train_filename[0] , train_filename[1] ,
-                                                   debug=debug , feature_names=feature_names )
+    data,label,weight = boost_multiscore.load_data( bnb_mc_filename=train_filename[0] , corsika_mc_filename=train_filename[1] ,
+                                                   debug=debug ,
+                                                   feature_names=feature_names ,
+                                                   tracks_frac=flags.evnts_frac )
+
+    
+
+
+
+    # (B) cross-validation step
+    # ---------------------------------------
+    do_cross_validation = yesno('cross validate?')
+    if do_cross_validation:
+        test_error,test_falsepos,test_falseneg,scores = boost_multiscore.run_cv( data , label , weight , parameters )
+        
+        if flags.verbose:
+            print "test_error: \n",test_error
+            print "test_falsepos: \n",test_falsepos
+            print "test_falseneg: \n",test_falseneg
+            print "scores: \n",scores
 #
-#    
-#    if flags.verbose:
-#        print "data: \n",data
-#        print "label: \n",label
-#        print "weight: \n",weight
-#
-#
-#
-#    # (B) cross-validation step
-#    # ---------------------------------------
-#    if DoCrossValidation:
-#        test_error,test_falsepos,test_falseneg,scores = boost_cosmic.run_cv( data , label , weight , param )
-#        
-#        if flags.verbose:
-#            print "test_error: \n",test_error
-#            print "test_falsepos: \n",test_falsepos
-#            print "test_falseneg: \n",test_falseneg
-#            print "scores: \n",scores
-#    
 #        # (C) check if errors are stable
 #        # ---------------------------------------
 #        plt.figure()
@@ -418,7 +417,7 @@ def train_gbdt_MCBNB_and_CORSIKA( data_type_arr , nevents_train_arr ):
 #    
 #        print "see \n" + model_path + "/README_" + ModelName
 #        print "and \n" + model_path + "/importances_" + ModelName + ".pdf"
-    print 'done training... continue with predicting on tracks...'
+    print 'done training, continue with predicting on tracks...'
 
 
 
