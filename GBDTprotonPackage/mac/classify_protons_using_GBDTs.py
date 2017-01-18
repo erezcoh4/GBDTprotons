@@ -14,8 +14,8 @@ from gbdt_tools import *
 '''
 
 
-TrainingDataType        = 'openCOSMIC_MC'                       # options: 'openCOSMIC_MC' , 'MC_BNB'
-NumberOfTrainingEvents  = 200000                                # 'openCOSMIC_MC': 200000 , 'MC_BNB': 300000
+TrainingDataType        = 'MC_BNB'                              # options: 'openCOSMIC_MC' , 'MC_BNB'
+NumberOfTrainingEvents  = 300000                                # 'openCOSMIC_MC': 200000 , 'MC_BNB': 300000
 TracksListName          = "BNB_5e19POT"
 GBDTmodelName           = "multi_BNB_TrainedOn_MCBNB_MCCOSMIC"  # options: 'BNB_TrainedOn_only_MC_BNB'
 score                   = 0.9                                   # p_score = 0.0 for cosmics
@@ -53,6 +53,13 @@ if flags.option=="train GBDTs cross validation" or 'train' in flags.option:
 
 
 # -------------------------------------------------------------------
+if flags.option=="compute all GBDT multiscore for test sample" or 'test' in flags.option:
+    print_important("compute all GBDT multiscore for test sample")
+    # for BNB tracks classification - multi-class classifier:  muon , pion , proton , em (electron/photon)
+    calc_all_gbdt_multiscores( TracksListName='testsample_87789_tracks_MC_BNB' , GBDTmodelName=GBDTmodelName , TracksListPath=main_path+'/TestSamples' )
+
+
+# -------------------------------------------------------------------
 if flags.option=="compute all GBDT p-scores" or 'p-scores' in flags.option:
     # for cosmic tracks classification - single-class classifier
     calc_all_gbdt_scores( TracksListName , GBDTmodelName )
@@ -62,6 +69,7 @@ if flags.option=="compute all GBDT p-scores" or 'p-scores' in flags.option:
 if flags.option=="compute all GBDT multiscore" or 'multiscore' in flags.option:
     # for BNB tracks classification - multi-class classifier:  muon , pion , proton , em (electron/photon)
     calc_all_gbdt_multiscores( TracksListName , GBDTmodelName )
+
 
 
 # -------------------------------------------------------------------

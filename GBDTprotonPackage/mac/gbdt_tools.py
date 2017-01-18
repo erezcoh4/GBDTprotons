@@ -115,15 +115,9 @@ def TestSampleFileName( FileTypeToDivide , NumberOfEventsToTest ):
     
     return main_path + "/TestSamples/testsample_%d_tracks_"%NumberOfEventsToTest + FileTypeToDivide + ".csv"
 
-
 # -------------------------
 def GBDTtreeName( GBDTmodelName ):
     return GBDTmodels_path + "/" + GBDTmodelName + ".bst"
-
-
-
-
-
 
 
 
@@ -149,10 +143,6 @@ def divide_training_and_testing_samples( FileTypeToDivide , NumberOfEventsToTrai
     if (flags.verbose):
         print_filename( TrainFileName , "divided into training sample with %d tracks:"%NumberOfEventsToTrain)
         print_filename( TestFileName , "test sample with %d tracks:"%(Total - NumberOfEventsToTrain))
-
-
-
-
 
 # -------------------------
 def train_gbdt_cross_validation( FileTypeToDivide , NumberOfEventsToTrain ):
@@ -290,9 +280,6 @@ def train_gbdt_cross_validation( FileTypeToDivide , NumberOfEventsToTrain ):
     print "and \n" + model_path + "/importances_" + ModelName + ".pdf"
 
 
-
-
-
 # -------------------------------------------------------------------
 def train_gbdt_MCBNB_and_CORSIKA( data_type_arr=None , nevents_train_arr=None , parameters=None , tracks_frac=1):
     
@@ -419,11 +406,8 @@ def train_gbdt_MCBNB_and_CORSIKA( data_type_arr=None , nevents_train_arr=None , 
 #        print "and \n" + model_path + "/importances_" + ModelName + ".pdf"
     print 'done training, continue with predicting on tracks...'
 
-
-
-
 # -------------------------
-def calc_all_gbdt_scores( TracksListName , GBDTmodelName ):
+def calc_all_gbdt_scores( TracksListName , GBDTmodelName  ):
     SampleFileName = FeaturesFileName( TracksListName )
     if flags.verbose: print_filename( SampleFileName , "loading data from" )
 
@@ -443,10 +427,13 @@ def calc_all_gbdt_scores( TracksListName , GBDTmodelName ):
 
 
 # -------------------------
-def calc_all_gbdt_multiscores( TracksListName , GBDTmodelName ):
+def calc_all_gbdt_multiscores( TracksListName , GBDTmodelName , TracksListPath=None ):
     if flags.verbose: print_important( 'compute all gbdt multiscores' )
-    SampleFileName = FullFeaturesFileName( TracksListName )
-    if flags.verbose: print_filename( SampleFileName , "loading data from" )
+    if TracksListPath is None:
+        SampleFileName = FullFeaturesFileName( TracksListName )
+    else:
+        SampleFileName = TracksListPath + "/" + TracksListName + ".csv"
+    if flags.verbose: print_filename( SampleFileName , "input tracks file" )
     
     # create a directory for the results of classifying from this GBDT model
     init.generate_directory( Classified_protons_path(GBDTmodelName) )
