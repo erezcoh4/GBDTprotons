@@ -15,7 +15,8 @@ feature_names = [ # geometry
                  ,'cosmicscore','coscontscore','pidpida','pidchi'
                  # optical information - unused for open cosmic MC
                  ,'cfdistance'
-                 ]
+                 ,'MCpdgCode' , 'truth_KE' #  necessary for training..
+                ]
 
 features_scores_rse = [
                        'run','subrun','event','trackid'

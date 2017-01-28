@@ -13,7 +13,7 @@ def load_data(  bnb_mc_filename, corsika_mc_filename
               , tracks_frac=1
               ):
 
-    mc_bnb_tracks = pd.read_csv(bnb_mc_filename)
+    mc_bnb_tracks = pd.read_csv(bnb_mc_filename , usecols=feature_names)
     mc_bnb_tracks = mc_bnb_tracks[0:int(tracks_frac*len(mc_bnb_tracks))] # take only a fraction of the tracks for small-scale training on my machine
     
     mc_bnb_protons  = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==2212) & (mc_bnb_tracks.truth_KE>=KE_min)][feature_names]
@@ -21,7 +21,7 @@ def load_data(  bnb_mc_filename, corsika_mc_filename
     mc_bnb_em       = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==11) | (mc_bnb_tracks.MCpdgCode==-11) | (mc_bnb_tracks.MCpdgCode==22)][feature_names]
     mc_bnb_muons    = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==13) | (mc_bnb_tracks.MCpdgCode==-13)][feature_names]
 
-    corsika_mc_tracks = pd.read_csv(corsika_mc_filename)
+    corsika_mc_tracks = pd.read_csv(corsika_mc_filename , usecols=feature_names)
     corsika_mc_tracks = corsika_mc_tracks[0:int(tracks_frac*len(corsika_mc_tracks))] # take only a fraction of the tracks for small-scale training on my machine
     
     corsika_mc_tracks = corsika_mc_tracks[feature_names]
@@ -140,6 +140,7 @@ def parameter_opt( data , label , weight , parameters):
 
 
 
+# -------------------------------------------------------------------
 def compute_stats(ytest,ypred):
   
     yscore        = ypred[:,0]
@@ -148,50 +149,19 @@ def compute_stats(ytest,ypred):
     fold_error    = float(fold_falsepos*len(np.where(ytest != 0)[0]) + fold_falseneg*len(np.where(ytest == 0)[0]))/len(ytest)
 
     return fold_error,fold_falsepos,fold_falseneg
+# -------------------------------------------------------------------
 
-def make_bdt(data,label,weight):
 
-    # configure weights
-    #weight = np.ones(len(data))
-    #sum_wpos = sum( weight[i] for i in range(len(label)) if label[i] == 1.0  )
-    #sum_wneg = sum( weight[i] for i in range(len(label)) if label[i] == 0.0  )
-
-    # print weight statistics
-    #print ('weight statistics: wpos=%g, wneg=%g, ratio=%g' % ( sum_wpos, sum_wneg, sum_wpos/sum_wneg))
-    #wp = len(np.where(label == 1)[0])
-    #wd = len(np.where(label == 0)[0])
-
-    # setup parameters for xgboost
-    param = {}
-    # use logistic regression loss, use raw prediction before logistic transformation
-    # since we only need the rank
-    # cosmic data parameters
-    param['objective'] = 'multi:softprob'
-    # scale weight of positive examples
-    #param['scale_pos_weight'] = 3.*np.true_divide(wd,wp)
-    #print 'Scale pos. weight: {}'.format(3.*np.true_divide(wd,wp))
-    #param['scale_pos_weight'] = 100.*sum_wpos/sum_wneg
-    param['eta']               = 0.025
-    param['eval_metric']       = 'merror'
-    param['silent']            = 1
-    param['nthread']           = 6
-    param['min_child_weight']  = 4
-    param['max_depth']         = 13
-    param['gamma']             = 0.7
-    param['colsample_bytree']  = 0.5
-    param['subsample']         = 0.8
-    #param['reg_alpha']         = 1e-5
-    param['num_class']         = 5
+# -------------------------------------------------------------------
+def make_bdt( data , label , weight , parameters):
 
     # you can directly throw param in, though we want to watch multiple metrics here
-    plst = list(param.items())+[('eval_metric', 'mlogloss')]
-    #plst = list(param.items())
+    plst = list(parameters.items())+[('eval_metric', 'mlogloss')]
 
-    # boost 25 tres
-    num_round = 855
-    
     # make dmatrices from xgboost
     dtrain = xgb.DMatrix( data, label=label, weight=weight , missing=np.nan)
-    bst    = xgb.train(plst, dtrain, num_round)
+    bst    = xgb.train(plst, dtrain, parameters['num_round'])
         
     return bst
+# -------------------------------------------------------------------
+
