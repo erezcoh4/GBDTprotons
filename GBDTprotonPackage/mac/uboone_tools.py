@@ -5,7 +5,7 @@ sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/mySoftware/MySoftwarePackag
 sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/GBDTprotons/GBDTprotonPackage/boost')
 
 
-import input_flags ; flags = input_flags.get_args()
+#import input_flags ; flags = input_flags.get_args()
 import Initiation as init
 from ROOT import larlite
 from larlite import *

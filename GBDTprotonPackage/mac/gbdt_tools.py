@@ -1,7 +1,7 @@
 '''
     useful tools for GBDT analysis
 '''
-from uboone_tools import *
+#from uboone_tools import *
 from ROOT import GBDTanalysis
 
 
@@ -106,7 +106,7 @@ def FullFeaturesFileName( FileType ):
     return main_path + "/FeaturesFiles/full_features_" + FileType + "_AnalysisTrees.csv"
 
 # -------------------------
-def TrainingSampleFileName( FileTypeToDivide , NumberOfEventsToTrain ):
+def TrainingSampleFileName( FileTypeToDivide , NumberOfEventsToTrain , main_path='/uboone/app/users/ecohen/AnalysisTreesAna'):
     
     return main_path + "/TrainingSamples/trainsample_%d_tracks_"%NumberOfEventsToTrain + FileTypeToDivide + ".csv"
 

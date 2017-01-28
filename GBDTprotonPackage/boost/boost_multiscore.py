@@ -82,6 +82,8 @@ def run_cv( data , label , weight , parameters):
     
     # get folds
     skf = StratifiedKFold(label, 10, shuffle=True)
+    if parameters['debug']>1: print 'enumerate(skf):', enumerate(skf)
+    
     for i, (train, test) in enumerate(skf):
         print 'On fold {}'.format(i)
         #print train, test
@@ -114,34 +116,9 @@ def run_cv( data , label , weight , parameters):
 
 
 # -------------------------------------------------------------------
-def parameter_opt(data,label,weight):
-    # setup parameters for xgboost
-    param = {}
-    # use logistic regression loss, use raw prediction before logistic transformation
-    # since we only need the rank
-    param['objective']         = 'binary:logistic'
-    # scale weight of positive examples
-    param['scale_pos_weight']  = 2.
-    #param['scale_pos_weight'] = 100.*sum_wpos/sum_wneg
-    param['eta']               = 0.05
-    param['eval_metric']       = 'error'
-    param['silent']            = 1
-    param['nthread']           = 6
-    param['min_child_weight']  = 4
-    param['max_depth']         = 9
-    param['gamma']             = 0.0
-    param['colsample_bytree']  = 0.8
-    param['subsample']         = 0.8
-    #param['reg_alpha']         = 1e-5
+def parameter_opt( data , label , weight , parameters):
 
-    # you can directly throw param in, though we want to watch multiple metrics here
-    #plst = list(param.items())+[('eval_metric', 'falsepos')]
-    #plst = list(param.items())
-
-    dtrain = xgb.DMatrix(data,label=label)
-
-    # boost 25 tres
-    num_round = 200
+    dtrain = xgb.DMatrix(data,label=label,missing=np.nan)
 
     '''
     scale_pos_weights = [0.5,0.75,1.25]
@@ -153,8 +130,12 @@ def parameter_opt(data,label,weight):
 
     return
     '''
-    results = xgb.cv(param,dtrain,num_boost_round=num_round,nfold=10,stratified=True)
+    results = xgb.cv( parameters , dtrain ,
+                     num_boost_round=parameters['num_round'],
+                     nfold=parameters['Nfolds'] ,
+                     stratified=True )
     return results
+# -------------------------------------------------------------------
 
 
 
@@ -210,7 +191,7 @@ def make_bdt(data,label,weight):
     num_round = 855
     
     # make dmatrices from xgboost
-    dtrain = xgb.DMatrix( data, label=label, weight=weight )
+    dtrain = xgb.DMatrix( data, label=label, weight=weight , missing=np.nan)
     bst    = xgb.train(plst, dtrain, num_round)
         
     return bst

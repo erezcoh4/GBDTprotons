@@ -1,24 +1,34 @@
-features_path = "/Users/erezcohen/Desktop/uBoone/AnalysisTreesAna/FeaturesFiles/"
 
 import sys, pandas as pd, numpy as np, matplotlib.pyplot as plt, ast
 import matplotlib.pyplot as plt, matplotlib as mpl , seaborn as sns; sns.set(style="white", color_codes=True , font_scale=1)
 from matplotlib.ticker import NullFormatter,MultipleLocator, FormatStrFormatter
+from prompter import yesno
+
 
 sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/mySoftware/MySoftwarePackage/mac')
 sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/GBDTprotons/GBDTprotonPackage/boost')
 sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/GBDTprotons/GBDTprotonPackage/mac')
+
 
 import GeneralPlot as gp , Initiation as init
 import predict_multi
 from plot_tools import *
 from my_tools import *
 from calc_tools import *
+import boost_multiscore
+#from uboone_tools import *
+
 from matplotlib.colors import LogNorm
 
 generic = lambda x: ast.literal_eval(x)
 
-main_path = "/Users/erezcohen/Desktop/uBoone/AnalysisTreesAna"
+path = "/Users/erezcohen/Desktop/uBoone"
+main_path       = path + "/AnalysisTreesAna"
+lists_path      = path + "/Lists"
+data_files_path = path + "/DATA"
+ana_files_path  = path + "/analysis/AnaFiles"
 GBDTprotonsLists_path = main_path + "/PassedGBDTFiles"
+features_path         = main_path + "/FeaturesFiles/"
 
 # ----------------------------------------------------------------------
 def Classified_protons_path( GBDTmodelName ):
