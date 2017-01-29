@@ -3,6 +3,8 @@ sys.path.insert(0, '/uboone/app/users/ecohen/larlite/UserDev/mySoftware/MySoftwa
 sys.path.insert(0, '/uboone/app/users/ecohen/larlite/UserDev/GBDTprotons/GBDTprotonPackage/boost')
 sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/mySoftware/MySoftwarePackage/mac')
 sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/GBDTprotons/GBDTprotonPackage/boost')
+sys.path.insert(0, '/extra/Erez/uBoone/UserDev/mySoftware/MySoftwarePackage/mac')
+sys.path.insert(0, '/extra/Erez/uBoone/UserDev/GBDTprotons/GBDTprotonPackage/boost')
 
 
 #import input_flags ; flags = input_flags.get_args()
@@ -46,6 +48,19 @@ elif flags.worker=="uboone":
     ana_files_path  = data_path + "/analysis/AnaFiles"
     
     import csv
+
+
+elif flags.worker=="helion":
+    app_path  = "/extra/Erez/uBoone"
+    main_path       = app_path + "/AnalysisTreesAna"
+    data_path = app_path
+    lists_path      = data_path + "/Lists"
+    data_files_path = data_path + "/DATA"
+    ana_files_path  = data_path + "/analysis/AnaFiles"
+    
+    import pylab , csv , numpy as np, pandas as pd
+    import matplotlib.pyplot as plt, matplotlib.ticker as ticker
+    import boost_cosmic , predict_cosmic, predict_multi , boost_multiscore
 
 
 

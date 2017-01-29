@@ -60,6 +60,8 @@ features_multiscores_roi = [
     (4) apply - predict
 '''
 
+def set_main_path( fmain_path ):
+    main_path = fmain_path
 
 
 
