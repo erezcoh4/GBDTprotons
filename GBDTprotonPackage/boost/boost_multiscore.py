@@ -81,7 +81,9 @@ def run_cv( data , label , weight , parameters , Nskf=10):
     
     # get folds
     skf = StratifiedKFold(label, Nskf, shuffle=True)
-    if parameters['debug']>1: print 'enumerate(skf):', enumerate(skf)
+    if parameters['debug']>1:
+        print 'enumerate(skf):', enumerate(skf)
+        print 'plst:',plst
     
     for i, (train, test) in enumerate(skf):
         print 'On fold {}'.format(i)
