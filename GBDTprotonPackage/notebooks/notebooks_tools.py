@@ -9,6 +9,11 @@ sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/mySoftware/MySoftwarePackag
 sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/GBDTprotons/GBDTprotonPackage/boost')
 sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/GBDTprotons/GBDTprotonPackage/mac')
 
+sys.path.insert(0, '/home/erez/larlite/UserDev/mySoftware/MySoftwarePackage/mac')
+sys.path.insert(0, '/home/erez/larlite/UserDev/GBDTprotons/GBDTprotonPackage/boost')
+sys.path.insert(0, '/home/erez/larlite/UserDev/GBDTprotons/GBDTprotonPackage/mac')
+
+
 
 import GeneralPlot as gp , Initiation as init
 import predict_multi
