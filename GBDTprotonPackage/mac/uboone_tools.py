@@ -3,6 +3,8 @@ sys.path.insert(0, '/uboone/app/users/ecohen/larlite/UserDev/mySoftware/MySoftwa
 sys.path.insert(0, '/uboone/app/users/ecohen/larlite/UserDev/GBDTprotons/GBDTprotonPackage/boost')
 sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/mySoftware/MySoftwarePackage/mac')
 sys.path.insert(0, '/Users/erezcohen/larlite/UserDev/GBDTprotons/GBDTprotonPackage/boost')
+sys.path.insert(0, '/extra/Erez/uBoone/UserDev/mySoftware/MySoftwarePackage/mac')
+sys.path.insert(0, '/extra/Erez/uBoone/UserDev/GBDTprotons/GBDTprotonPackage/boost')
 
 
 #import input_flags ; flags = input_flags.get_args()
