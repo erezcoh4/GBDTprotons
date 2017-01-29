@@ -14,12 +14,12 @@ sys.path.insert(0, '/home/erez/larlite/UserDev/GBDTprotons/GBDTprotonPackage/boo
 sys.path.insert(0, '/home/erez/larlite/UserDev/GBDTprotons/GBDTprotonPackage/mac')
 
 
-
 import GeneralPlot as gp , Initiation as init
-import predict_multi
 from plot_tools import *
 from my_tools import *
 from calc_tools import *
+
+import predict_multi
 import boost_multiscore
 #from uboone_tools import *
 

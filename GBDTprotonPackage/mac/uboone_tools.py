@@ -48,6 +48,19 @@ elif flags.worker=="uboone":
     import csv
 
 
+elif flags.worker=="helion":
+    app_path  = "/extra/Erez/uBoone"
+    main_path       = app_path + "/AnalysisTreesAna"
+    data_path = app_path
+    lists_path      = data_path + "/Lists"
+    data_files_path = data_path + "/DATA"
+    ana_files_path  = data_path + "/analysis/AnaFiles"
+    
+    import pylab , csv , numpy as np, pandas as pd
+    import matplotlib.pyplot as plt, matplotlib.ticker as ticker
+    import boost_cosmic , predict_cosmic, predict_multi , boost_multiscore
+
+
 
 # analysis trees
 anatrees_lists_path = "/pnfs/uboone/persistent/users/aschu/devel/v05_11_01/hadd"
