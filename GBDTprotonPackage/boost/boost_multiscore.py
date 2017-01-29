@@ -66,7 +66,7 @@ def load_data(  bnb_mc_filename, corsika_mc_filename
 
 
 # -------------------------------------------------------------------
-def run_cv( data , label , weight , parameters):
+def run_cv( data , label , weight , parameters , Nskf=10):
     
     # use logistic regression loss, use raw prediction before logistic transformation
     # since we only need the rank
@@ -76,12 +76,11 @@ def run_cv( data , label , weight , parameters):
     # you can directly throw param in, though we want to watch multiple metrics here
     plst  = list(parameters.items())+[('eval_metric', 'mlogloss')]
     
-    num_round   = 855
     test_error  , test_falsepos , test_falseneg = [] , [] , []
     scores      = np.zeros((6,len(label)))
     
     # get folds
-    skf = StratifiedKFold(label, 10, shuffle=True)
+    skf = StratifiedKFold(label, Nskf, shuffle=True)
     if parameters['debug']>1: print 'enumerate(skf):', enumerate(skf)
     
     for i, (train, test) in enumerate(skf):
@@ -97,7 +96,7 @@ def run_cv( data , label , weight , parameters):
         dtrain = xgb.DMatrix( Xtrain, label=ytrain, weight=weight , missing=np.nan )
         dtest  = xgb.DMatrix( Xtest , missing=np.nan )
         
-        bst   = xgb.train(plst, dtrain, num_round)
+        bst   = xgb.train(plst, dtrain, parameters['num_round'])
         ypred = bst.predict(dtest)
         fold_error,fold_falsepos,fold_falseneg = compute_stats(ytest,ypred)
         test_error.append(fold_error)
