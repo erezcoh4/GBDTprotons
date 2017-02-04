@@ -7,13 +7,12 @@ sys.path.insert(0, '/home/erez/larlite/UserDev/mySoftware/MySoftwarePackage/mac'
 sys.path.insert(0, '/home/erez/larlite/UserDev/GBDTprotons/GBDTprotonPackage/boost')
 
 
-#import input_flags ; flags = input_flags.get_args()
+import input_flags ; flags = input_flags.get_args()
 import Initiation as init
 from ROOT import larlite
 from larlite import *
 from ROOT import TPlots
 from my_tools import *
-from input_flags import *
 
 # --------------------------------------------------
 #                       globals
