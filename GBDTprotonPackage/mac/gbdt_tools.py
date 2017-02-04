@@ -300,7 +300,7 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None, data_type
         '''
     
     model_path = GBDTmodels_path + '/' + model_name
-    os.makedirs(model_path)
+    init.generate_directory(model_path)
     print 'generated a new directory: '+model_path
     model_suffix = '%s_%s_%s'%(model_name,data_type_arr[0],data_type_arr[1])
 
