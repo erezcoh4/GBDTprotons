@@ -13,7 +13,7 @@ from ROOT import larlite
 from larlite import *
 from ROOT import TPlots
 from my_tools import *
-
+from input_flags import *
 
 # --------------------------------------------------
 #                       globals
@@ -61,6 +61,7 @@ elif flags.worker=="helion":
     import pylab , csv , numpy as np, pandas as pd
     import matplotlib.pyplot as plt, matplotlib.ticker as ticker
     import boost_cosmic , predict_cosmic, predict_multi , boost_multiscore
+    from prompter import yesno
 
 
 
