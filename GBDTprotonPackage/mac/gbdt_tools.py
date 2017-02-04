@@ -308,7 +308,7 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None, data_type
 
     train_filename = []
     for data,nevnts in zip(data_type_arr,nevents_train_arr):
-        train_filename.append(TrainingSampleFileName( data , nevnts ))
+        train_filename.append(TrainingSampleFileName( data , nevnts , main_path=main_path))
         print_filename( train_filename[-1] , "input: traininig sample file" )
 
     
