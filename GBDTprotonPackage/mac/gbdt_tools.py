@@ -400,7 +400,7 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None, data_type
         df.plot(kind='barh', x='feature', y='fscore', legend=False, figsize=(10, 10))
         plt.title('XGBoost Feature Importance',fontsize=25)
         plt.xlabel('relative importance',fontsize=25)
-        plt.gcf().savefig( model_path + '/importances_model_%s.pdf'%model_suffix
+        plt.gcf().savefig( model_path + '/importances_model_%s.pdf'%model_suffix)
         bdt.save_model( model_path + '/bst_model_%s.bst'%model_suffix)
         print "done building bst model"
 
