@@ -23,22 +23,60 @@ GBDTmodelName           = "multi_BNB_TrainedOn_MCBNB_MCCOSMIC"  # options: 'BNB_
 score                   = 0.9                                   # p_score = 0.0 for cosmics
 maxscore                = 'muons'
 
-parameters = {  'debug':flags.verbose,
-                'objective':'binary:logistic' ,
-                'eta':0.025 ,
-                'eval_metric':'error',
-                'silent':1,
-                'nthread':6,
-                'min_child_weight':4,
-                'max_depth':13,
-                'gamma':0.7,
-                'colsample_bytree':0.5,
-                'subsample':0.8,
-                'num_class':5,
-                'Ntrees':500,
-                'Nfolds':10,
-#                'reg_alpha':1e-5
-                }
+#parameters = {  'debug':flags.verbose,
+#                'objective':'binary:logistic' ,
+#                'eta':0.025 ,
+#                'eval_metric':'error',
+#                'silent':1,
+#                'nthread':6,
+#                'min_child_weight':4,
+#                'max_depth':13,
+#                'gamma':0.7,
+#                'colsample_bytree':0.5,
+#                'subsample':0.8,
+#                'num_class':5,
+#                'Ntrees':500,
+#                'Nfolds':10,
+##                'reg_alpha':1e-5
+#                }
+
+feature_names = [ # geometry
+                 'nhits','length', 'distlenratio'
+                 ,'theta','phi' # to be removed in another model...
+                 ,'starty','startz','endy','endz'# to be removed in another model...
+                 # calorimetry
+                 ,'startdqdx','enddqdx','dqdxdiff','dqdxratio','totaldqdx','averagedqdx'
+                 # uboonecode tagging and PID
+                 ,'cosmicscore','coscontscore','pidpida','pidchi'
+                 # optical information - unused for open cosmic MC
+                 ,'cfdistance'
+                 ,'MCpdgCode' , 'truth_KE' #  necessary just for training..
+                 ]
+
+
+parameters = dict({
+                  'evnts_frac':flags.evnts_frac,# events fraction to process
+                  'debug':flags.verbose, # prints out information during the processes
+                  'Nskf':100
+                  'scale_pos_weight':2., # Balancing of positive and negative weights.
+                  'objective':'multi:softprob', # Specify the learning task and the corresponding learning objective or a custom objective function to be used
+                  #  in previous rounds was'objective':'binary:logistic'
+                  'eta':0.025, # Boosting learning rate
+                  'eval_metric':'merror', # a custom evaluation metric
+                  'silent':True, # Whether to print messages while running boosting
+                  'nthread':60, # Number of parallel threads used to run xgboost.
+                  'min_child_weight':4, # Minimum sum of instance weight(hessian) needed in a child.
+                  'max_depth':13,# Maximum tree depth for base learners
+                  'gamma':0.7, # Minimum loss reduction required to make a further partition on a leaf node of the tree.
+                  'colsample_bytree':0.5, # Subsample ratio of columns when constructing each tree
+                  'subsample':0.8, # Subsample ratio of the training instance
+                  'num_class':5, #  If early stopping occurs...
+                  'Ntrees':500,
+                  'Nfolds':10,
+                  'num_round':200
+                  #         'reg_alpha':1e-5 # L1 regularization term on weights
+                  })
+# [http://xgboost.readthedocs.io/en/latest/python/python_api.html]
 
 
 # -------------------------------------------------------------------
@@ -51,7 +89,9 @@ if flags.option=="divide training and testing samples" or 'divide' in flags.opti
 if flags.option=="train GBDTs cross validation" or 'train' in flags.option:
     
     #    train_gbdt_cross_validation( TrainingDataType , NumberOfTrainingEvents )
-    train_gbdt_MCBNB_and_CORSIKA( data_type_arr=['MC_BNB','openCOSMIC_MC'] , nevents_train_arr=[300000,200000] , parameters=parameters )
+    train_gbdt_MCBNB_and_CORSIKA(  model_name='all_features_possible' ,
+                                 feature_names=feature_names,
+                                 data_type_arr=['MC_BNB','openCOSMIC_MC'] , nevents_train_arr=[300000,200000] , parameters=parameters )
 
 
 # -------------------------------------------------------------------

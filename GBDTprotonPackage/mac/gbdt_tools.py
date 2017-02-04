@@ -7,16 +7,18 @@ from ROOT import GBDTanalysis
 
 # The features that we want to use for the GBDT
 # -------------------------
-feature_names = [ # geometry
-                 'nhits','length','starty','startz','endy','endz','theta','phi', 'distlenratio'
-                 # calorimetry
-                 ,'startdqdx','enddqdx','dqdxdiff','dqdxratio','totaldqdx','averagedqdx'
-                 # uboonecode tagging and PID
-                 ,'cosmicscore','coscontscore','pidpida','pidchi'
-                 # optical information - unused for open cosmic MC
-                 ,'cfdistance'
-                 ,'MCpdgCode' , 'truth_KE' #  necessary for training..
-                ]
+#feature_names = [ # geometry
+#                 'nhits','length', 'distlenratio'
+#                 ,'theta','phi' # to be removed in another model...
+#                 ,'starty','startz','endy','endz'# to be removed in another model...
+#                 # calorimetry
+#                 ,'startdqdx','enddqdx','dqdxdiff','dqdxratio','totaldqdx','averagedqdx'
+#                 # uboonecode tagging and PID
+#                 ,'cosmicscore','coscontscore','pidpida','pidchi'
+#                 # optical information - unused for open cosmic MC
+#                 ,'cfdistance'
+#                 ,'MCpdgCode' , 'truth_KE' #  necessary just for training..
+#                ]
 
 features_scores_rse = [
                        'run','subrun','event','trackid'
@@ -284,19 +286,26 @@ def train_gbdt_cross_validation( FileTypeToDivide , NumberOfEventsToTrain ):
 
 
 # -------------------------------------------------------------------
-def train_gbdt_MCBNB_and_CORSIKA( data_type_arr=None , nevents_train_arr=None , parameters=None , tracks_frac=1):
+def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None, data_type_arr=None , nevents_train_arr=None , parameters=None , tracks_frac=1 , prompt_yesno=False ):
     
     '''
         Parameters: data_type_arr: ndarray
-                    array of data types to train on, MC-BNB and CORSIKA-MC
-                    
-                    nevents_train_arr: ndarray
-                    number of events to train form in each sample
-                    
+        array of data types to train on, MC-BNB and CORSIKA-MC
+        
+        nevents_train_arr: ndarray
+        number of events to train form in each sample
+        
         Returns:    bdt_model: xgb.train
-                    gdbt model
+        gdbt model
         '''
     
+    model_path = GBDTmodels_path + '/' + model_name
+    os.makedirs(model_path)
+    print 'generated a new directory: '+model_path
+    model_suffix = '%s_%s_%s'%(model_name,data_type_arr[0],data_type_arr[1])
+
+
+
     train_filename = []
     for data,nevnts in zip(data_type_arr,nevents_train_arr):
         train_filename.append(TrainingSampleFileName( data , nevnts ))
@@ -307,107 +316,100 @@ def train_gbdt_MCBNB_and_CORSIKA( data_type_arr=None , nevents_train_arr=None , 
 
     # (A) load the data
     # ---------------------------------------
-
-    data,label,weight = boost_multiscore.load_data( bnb_mc_filename=train_filename[0] , corsika_mc_filename=train_filename[1] ,
-                                                   debug=debug ,
+    data,label,weight = boost_multiscore.load_data( bnb_mc_filename=train_filename[0] ,
+                                                   corsika_mc_filename=train_filename[1] ,
+                                                   debug=parameters['debug'] ,
                                                    feature_names=feature_names ,
-                                                   tracks_frac=flags.evnts_frac )
-
-    
+                                                   tracks_frac=parameters['evnts_frac'] )
 
 
 
     # (B) cross-validation step
     # ---------------------------------------
-    do_cross_validation = yesno('cross validate?')
+    do_cross_validation = yesno('cross validate?') if prompt_yesno else True
     if do_cross_validation:
-        test_error,test_falsepos,test_falseneg,scores = boost_multiscore.run_cv( data , label , weight , parameters )
+        results = test_error,test_falsepos,test_falseneg,scores = boost_multiscore.run_cv( data , label , weight , parameters , Nskf=parameters['Nskf'] )
         
-        if flags.verbose:
+        if flags.verbose>2:
             print "test_error: \n",test_error
             print "test_falsepos: \n",test_falsepos
             print "test_falseneg: \n",test_falseneg
             print "scores: \n",scores
-#
-#        # (C) check if errors are stable
-#        # ---------------------------------------
-#        plt.figure()
-#        plt.hist( test_error )
-#        plt.title("test errors")
-#        plt.xlabel("error")
-#        plt.ylabel("Frequency")
-#        plt.savefig( model_path + "/test_errors_" + ModelName + ".pdf" )
-#        plt.show()
-#        
-#            DoContinue = yesno('build model?')
-#
-#    if DoCrossValidation == False: DoContinue = True
-#    # (D) build the GBDTs which is training on the entire
-#    # training sample, with no boot-strapping
-#    # ---------------------------------------
-#    if DoContinue:
-#        
-#        BoostedTree = boost_cosmic.make_bdt( data , label , weight , param )
-#        BoostedTree.save_model( model_path + "/" + ModelName + ".bst")
-#        
-#        if flags.verbose:
-#            print "done"
-#            print "BoostedTree: \n",BoostedTree
-#            print "now use the test sample and test this"
-#
-#
-#
-#
-#    # plot the importances...
-#    importances_fig = boost_cosmic.plot_importances(BoostedTree).figure
-#    importances_fig.savefig( model_path + "/importances_" + ModelName + ".pdf" )
-#    importances_fig.show()
-#    
-#    
-#    
-#    file = open ( model_path + "/README_" + ModelName   , "wb" )
-#    
-#    string = "\nGBDT modeling \n--------------------- \n"
-#    string+= ("built the model to \n " + model_path + "/" + ModelName + ".bst") if DoContinue else "did not built the model..."
-#    string+= "\n%4d-%02d-%02d"       %time.localtime()[0:3]
-#    string+= "\n--------------------- \n"
-#    string+= "\nmodel: "             +ModelName
-#    string+= "\nobjective: "         +param['objective']
-#    string+= "\neta: "               +str(param['eta'])
-#    string+= "\neval_metric: "       +str(param['eval_metric'])
-#    string+= "\nsilent: "            +str(param['silent'])
-#    string+= "\nnthread: "           +str(param['nthread'])
-#    string+= "\nmin_child_weight: "  +str(param['min_child_weight'])
-#    string+= "\nmax_depth: "         +str(param['max_depth'])
-#    string+= "\ngamma: "             +str(param['gamma'])
-#    string+= "\ncolsample_bytree: "  +str(param['colsample_bytree'])
-#    string+= "\nsubsample: "         +str(param['subsample'])
-#    string+= "\nNtrees: "            +str(param['Ntrees'])
-#    string+= "\nNfolds: "            +str(param['Nfolds'])
-#    string+= "\n--------------------- \n"
-#    if DoCrossValidation:
-#        string+= "\terrors:\n"
-#        string+= str(test_error[:])
-#        string+= "\n--------------------- \n"
-#        string+= "false-positive: \n"
-#        string+=  str(test_falsepos[:])
-#        string+= "\n--------------------- \n"
-#        string+= "false-negative: \n"
-#        string+=  str(test_falseneg[:])
-#    string+= "\n--------------------- \n"
-#
-#    file.write(string)
-#    
-#    print "done,"
-#    
-#    if DoContinue:
-#        print "built the model to \n" + model_path + "/" + ModelName + ".bst"
-#    else:
-#        print "did not built the model"
-#    
-#        print "see \n" + model_path + "/README_" + ModelName
-#        print "and \n" + model_path + "/importances_" + ModelName + ".pdf"
+
+        # plot cross-validation results
+        fig = plt.figure(figsize=(20,20))
+        ax = fig.add_subplot(2,2,1)
+        plt.hist(test_error)
+        set_axes(ax,x_label='test error',y_label='counts',fontsize=20)
+
+        ax = fig.add_subplot(2,2,2)
+        h,bins,_=plt.hist([test_falsepos,test_falseneg],bins=np.linspace(0,0.03,30),label=['false positive','false negative']);
+        set_axes(ax,x_label='fraction',y_label='counts',fontsize=25)
+        ax.set_xlim(0,0.03)
+        ax.set_ylim(0,1.1*np.max(h))
+        plt.legend(fontsize=25,loc='best')
+
+        ax = fig.add_subplot(2,1,2)
+        plt.hist([scores[0],scores[1],scores[2],scores[3],scores[4]],
+                 label=['$p$-score','$\\mu$-score','$\\pi$-score','$em$-score','$cosmic$-score'],
+                 histtype='step',linewidth=2,bins=np.linspace(0,1,20));
+        set_axes(ax,x_label='score',fontsize=25)
+        plt.legend(fontsize=25,loc='best')
+
+
+        resultsfilename = model_path + '/cv_test_errors_scores_%s.csv'%model_suffix
+        plotfilename = model_path + '/cv_test_errors_scores_%s.pdf'%model_suffix
+        results.to_csv( resultsfilename )
+        print_filename( resultsfilename , 'saved cross-validation results')
+        plt.savefig( plotfilename )
+        print_filename( plotfilename , 'plotted cross-validation results')
+        print "done cross-validation"
+
+
+
+    do_optimize_paramters = yesno('optimize parameters?') if prompt_yesno else True
+    if do_optimize_paramters:
+        results_optimize = test_error,test_falsepos,test_falseneg,scores = boost_multiscore.parameter_opt( data , label , weight , parameters )
+        resultsfilename = model_path + '/parameter_opt_scores_%s.csv'%model_suffix
+        results.to_csv( resultsfilename )
+        print_filename( resultsfilename , 'saved optimize parameters results')
+        print "done optimizing parameters"
+
+
+    do_make_bdt = yesno('make bdt?') if prompt_yesno else True
+    if do_make_bdt:
+        bdt = boost_multiscore.make_bdt( data , label , weight , parameters)
+
+        # plot importances with features names...
+        outfile = open('xgb_%s.fmap'%model_suffix, 'w')
+        i = 0
+        for feat in feature_names:
+            if feat is not 'truth_KE' and feat is not 'MCpdgCode':
+                outfile.write('{0}\t{1}\tq\n'.format(i, feat))
+                i = i + 1
+                outfile.close()
+
+        importance = bdt.get_fscore(fmap='xgb_%s.fmap'%model_suffix)
+        importance = sorted(importance.items(), key=operator.itemgetter(1))
+
+        df = pd.DataFrame(importance, columns=['feature', 'fscore'])
+        df['fscore'] = df['fscore'] / df['fscore'].sum()
+
+        plt.figure()
+        df.plot()
+        df.plot(kind='barh', x='feature', y='fscore', legend=False, figsize=(10, 10))
+        plt.title('XGBoost Feature Importance',fontsize=25)
+        plt.xlabel('relative importance',fontsize=25)
+        plt.gcf().savefig( model_path + '/importances_model_%s.pdf'%model_suffix
+        bdt.save_model( model_path + '/bst_model_%s.bst'%model_suffix)
+        print "done building bst model"
+
     print 'done training, continue with predicting on tracks...'
+
+
+
+
+
 
 # -------------------------
 def calc_all_gbdt_scores( TracksListName , GBDTmodelName  ):
