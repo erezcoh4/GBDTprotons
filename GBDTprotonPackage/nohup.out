@@ -1,0 +1,174 @@
+[TerminalIPythonApp] WARNING | Subcommand `ipython notebook` is deprecated and will be removed in future versions.
+[TerminalIPythonApp] WARNING | You likely want to use `jupyter notebook` in the future
+[W 18:46:59.565 NotebookApp] Widgets are unavailable. Please install widgetsnbextension or ipywidgets 4.0
+[I 18:46:59.587 NotebookApp] Serving notebooks from local directory: /home/erez/larlite/UserDev/GBDTprotons/GBDTprotonPackage/notebooks
+[I 18:46:59.587 NotebookApp] 0 active kernels 
+[I 18:46:59.587 NotebookApp] The Jupyter Notebook is running at: http://localhost:8889/
+[I 18:46:59.588 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+
+(firefox:36903): GLib-GObject-CRITICAL **: g_object_ref: assertion 'object->ref_count > 0' failed
+
+(firefox:36903): GLib-GObject-CRITICAL **: g_object_unref: assertion 'object->ref_count > 0' failed
+
+(firefox:36903): GLib-GObject-CRITICAL **: g_object_ref: assertion 'object->ref_count > 0' failed
+
+(firefox:36903): GLib-GObject-CRITICAL **: g_object_unref: assertion 'object->ref_count > 0' failed
+[I 18:47:09.928 NotebookApp] 302 GET / (::1) 1.60ms
+[W 18:47:16.819 NotebookApp] Notebook train_GBDTs_localy.ipynb is not trusted
+[W 18:47:16.866 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 13.00ms referer=http://localhost:8888/notebooks/train_GBDTs_localy.ipynb
+[I 18:47:17.457 NotebookApp] Kernel started: 2ae6773f-8af5-45c9-b89b-8696aa70709a
+
+(firefox:36903): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+Failed to connect to socket /tmp/dbus-CCKlH7CHPP: Connection refused
+
+[1mRooFit v3.60 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+
+(firefox:36903): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+Failed to connect to socket /tmp/dbus-SfGVMxz5Me: Connection refused
+
+(firefox:36903): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+Failed to connect to socket /tmp/dbus-AfD5Dn2ocP: Connection refused
+
+(firefox:36903): LIBDBUSMENU-GLIB-WARNING **: Unable to get session bus: Could not connect: Connection refused
+[W 18:47:49.452 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[I 18:47:50.977 NotebookApp] Kernel started: 725fbf4c-463c-40c5-bb0f-1bfd70c6bba0
+[W 18:47:51.058 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 2.95ms referer=http://localhost:8889/notebooks/train_GBDTs_helion.ipynb
+[W 18:47:55.566 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[W 18:47:55.595 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 1.91ms referer=http://localhost:8888/notebooks/train_GBDTs_helion.ipynb
+
+(firefox:36903): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+Failed to connect to socket /tmp/dbus-uyOVb71zk3: Connection refused
+
+[1mRooFit v3.60 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+
+(firefox:36903): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+Failed to connect to socket /tmp/dbus-VvMnLspyG0: Connection refused
+[I 18:49:56.248 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 18:49:56.250 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[W 18:55:56.080 NotebookApp] WebSocket ping timeout after 119955 ms.
+[I 07:58:30.809 NotebookApp] 302 GET / (::1) 1.39ms
+[W 07:58:34.588 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[W 07:58:34.622 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 2.77ms referer=http://localhost:8888/notebooks/train_GBDTs_helion.ipynb
+[W 08:00:07.199 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[W 08:00:07.266 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 3.56ms referer=http://localhost:8888/notebooks/train_GBDTs_helion.ipynb
+[W 08:00:24.968 NotebookApp] Notebook train_GBDTs_localy.ipynb is not trusted
+[W 08:00:25.002 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 1.92ms referer=http://localhost:8888/notebooks/train_GBDTs_localy.ipynb
+[I 08:00:32.069 NotebookApp] Kernel shutdown: 2ae6773f-8af5-45c9-b89b-8696aa70709a
+[I 08:00:37.088 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 08:00:37.090 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[I 08:01:34.004 NotebookApp] Kernel shutdown: 725fbf4c-463c-40c5-bb0f-1bfd70c6bba0
+[W 08:01:41.455 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[W 08:01:41.523 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 2.86ms referer=http://localhost:8888/notebooks/train_GBDTs_helion.ipynb
+[I 08:01:42.009 NotebookApp] Kernel started: 0c428e64-ecf1-416f-8d44-56bcb1def5d4
+
+[1mRooFit v3.60 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+[I 08:03:52.785 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 08:03:52.786 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[W 15:17:42.926 NotebookApp] WebSocket ping timeout after 119998 ms.
+[W 15:18:07.876 NotebookApp] WebSocket ping timeout after 119996 ms.
+[W 18:12:26.121 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[W 18:12:26.149 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 2.95ms referer=http://localhost:8888/notebooks/train_GBDTs_helion.ipynb
+[I 18:12:57.109 NotebookApp] Kernel interrupted: 0c428e64-ecf1-416f-8d44-56bcb1def5d4
+[W 18:13:06.451 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[W 18:13:06.478 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 1.95ms referer=http://localhost:8888/notebooks/train_GBDTs_helion.ipynb
+[I 18:14:49.120 NotebookApp] Kernel interrupted: 0c428e64-ecf1-416f-8d44-56bcb1def5d4
+[I 18:15:00.131 NotebookApp] Kernel restarted: 0c428e64-ecf1-416f-8d44-56bcb1def5d4
+[I 18:15:06.787 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 18:15:06.789 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+
+[1mRooFit v3.60 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+[I 18:17:07.251 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 18:17:07.253 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[W 19:41:01.077 NotebookApp] WebSocket ping timeout after 119997 ms.
+[W 07:32:28.602 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[W 07:32:28.633 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 2.10ms referer=http://localhost:8888/notebooks/train_GBDTs_helion.ipynb
+[W 07:35:11.445 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[W 07:35:11.477 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 2.22ms referer=http://localhost:8888/notebooks/train_GBDTs_helion.ipynb
+[I 07:37:12.350 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 07:37:12.351 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[W 07:44:16.490 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[W 07:44:16.524 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 2.45ms referer=http://localhost:8888/notebooks/train_GBDTs_helion.ipynb
+[W 07:46:12.747 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[W 07:46:12.779 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 2.25ms referer=http://localhost:8888/notebooks/train_GBDTs_helion.ipynb
+[I 09:03:51.104 NotebookApp] 302 GET / (::1) 0.93ms
+[W 09:03:54.880 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[W 09:03:54.908 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 1.99ms referer=http://localhost:8888/notebooks/train_GBDTs_helion.ipynb
+[I 09:05:55.531 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 09:05:55.533 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[I 10:28:36.703 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 10:28:36.705 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[W 16:49:25.339 NotebookApp] WebSocket ping timeout after 119997 ms.
+[I 08:04:48.071 NotebookApp] 302 GET / (::1) 1.34ms
+[W 08:04:50.744 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[W 08:04:50.773 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 2.57ms referer=http://localhost:8888/notebooks/train_GBDTs_helion.ipynb
+[I 08:06:51.213 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 08:06:51.215 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[I 08:12:59.627 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 08:12:59.629 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[I 08:14:59.561 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 08:14:59.563 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[I 08:16:59.573 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 08:16:59.575 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[I 08:19:00.015 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 08:19:00.017 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[W 09:28:21.125 NotebookApp] 404 GET /notebooks/sensitivity_studies_pp_cm.ipynb (::1): No such file or directory: sensitivity_studies_pp_cm.ipynb
+[W 09:28:21.128 NotebookApp] 404 GET /notebooks/sensitivity_studies_pp_cm.ipynb (::1) 4.87ms referer=None
+[W 09:28:21.421 NotebookApp] 404 GET /notebooks/sensitivity_studies_eepp_eep.ipynb (::1): No such file or directory: sensitivity_studies_eepp_eep.ipynb
+[W 09:28:21.423 NotebookApp] 404 GET /notebooks/sensitivity_studies_eepp_eep.ipynb (::1) 2.91ms referer=None
+[I 09:30:03.649 NotebookApp] Kernel interrupted: 0c428e64-ecf1-416f-8d44-56bcb1def5d4
+[I 09:31:34.173 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 09:31:34.175 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[W 11:04:51.300 NotebookApp] WebSocket ping timeout after 119998 ms.
+[W 14:31:09.698 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[W 14:31:09.788 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 29.17ms referer=http://localhost:8888/notebooks/train_GBDTs_helion.ipynb
+[I 14:33:10.699 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 14:33:10.701 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[W 15:33:40.220 NotebookApp] WebSocket ping timeout after 119997 ms.
+[W 17:27:02.431 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[W 17:27:02.479 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 2.06ms referer=http://localhost:8888/notebooks/train_GBDTs_helion.ipynb
+[I 17:29:03.109 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 17:29:03.111 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[I 17:51:24.146 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 17:51:24.147 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[I 18:03:29.184 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 18:03:29.186 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[W 20:02:32.962 NotebookApp] WebSocket ping timeout after 119998 ms.
+[I 10:48:44.372 NotebookApp] 302 GET / (::1) 12.26ms
+[I 10:48:45.533 NotebookApp] 302 GET / (::1) 1.32ms
+[W 10:48:47.504 NotebookApp] Notebook train_GBDTs_helion.ipynb is not trusted
+[W 10:48:47.541 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 2.64ms referer=http://localhost:8888/notebooks/train_GBDTs_helion.ipynb
+[I 10:50:48.012 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 10:50:48.013 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[W 10:51:29.825 NotebookApp] Notebook train_GBDTs_localy.ipynb is not trusted
+[W 10:51:29.860 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20170129184659 (::1) 2.05ms referer=http://localhost:8888/notebooks/train_GBDTs_localy.ipynb
+[I 10:51:30.303 NotebookApp] Kernel started: ae912a53-34e9-4080-b62f-f92f731ecf9d
+[I 10:52:48.008 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 10:52:48.011 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[I 10:53:31.010 NotebookApp] Saving file at /train_GBDTs_localy.ipynb
+[W 10:53:31.012 NotebookApp] Saving untrusted notebook train_GBDTs_localy.ipynb
+[I 10:54:48.012 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 10:54:48.013 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[I 10:56:53.108 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 10:56:53.111 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[I 14:40:07.517 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 14:40:07.519 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[I 14:42:07.540 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 14:42:07.541 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[I 14:44:07.539 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 14:44:07.541 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[I 14:46:25.904 NotebookApp] Kernel interrupted: 0c428e64-ecf1-416f-8d44-56bcb1def5d4
+[I 14:48:15.877 NotebookApp] Saving file at /train_GBDTs_helion.ipynb
+[W 14:48:15.880 NotebookApp] Saving untrusted notebook train_GBDTs_helion.ipynb
+[W 19:02:48.134 NotebookApp] WebSocket ping timeout after 119997 ms.
