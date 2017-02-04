@@ -57,7 +57,7 @@ feature_names = [ # geometry
 parameters = dict({
                   'evnts_frac':flags.evnts_frac,# events fraction to process
                   'debug':flags.verbose, # prints out information during the processes
-                  'Nskf':100
+                  'Nskf':100,
                   'scale_pos_weight':2., # Balancing of positive and negative weights.
                   'objective':'multi:softprob', # Specify the learning task and the corresponding learning objective or a custom objective function to be used
                   #  in previous rounds was'objective':'binary:logistic'
