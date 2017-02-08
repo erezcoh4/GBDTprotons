@@ -55,9 +55,9 @@ feature_names = [ # geometry
 
 
 parameters = dict({
-                  'evnts_frac':0.001,# events fraction to process
+                  'evnts_frac':1,# events fraction to process
                   'debug':2, # prints out information during the processes
-                  'Nskf':2, # 100
+                  'Nskf':100, # 100
                   'scale_pos_weight':2., # Balancing of positive and negative weights.
                   'objective':'multi:softprob', # Specify the learning task and the corresponding learning objective or a custom objective function to be used
                   #  in previous rounds was'objective':'binary:logistic'
@@ -94,7 +94,7 @@ if flags.option=="train GBDTs cross validation" or 'train' in flags.option:
                                  feature_names=feature_names,
                                  data_type_arr=['MC_BNB','openCOSMIC_MC'] , nevents_train_arr=[300000,200000] ,
                                  parameters=parameters ,
-                                 prompt_yesno=True
+                                 prompt_yesno=False
                                  )
 
 
