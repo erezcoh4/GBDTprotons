@@ -36,6 +36,7 @@ if flags.worker=="erez":
     import matplotlib.pyplot as plt, matplotlib.ticker as ticker
     import boost_cosmic , predict_cosmic, predict_multi , boost_multiscore
     from prompter import yesno
+    import csv
 
 
 elif flags.worker=="uboone":
@@ -61,6 +62,7 @@ elif flags.worker=="helion":
     import matplotlib.pyplot as plt, matplotlib.ticker as ticker
     import boost_cosmic , predict_cosmic, predict_multi , boost_multiscore
     from prompter import yesno
+    import csv
 
 
 

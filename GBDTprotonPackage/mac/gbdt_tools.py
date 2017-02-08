@@ -359,19 +359,27 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None, data_type
 
         resultsfilename = model_path + '/cv_test_errors_scores_%s.csv'%model_suffix
         plotfilename = model_path + '/cv_test_errors_scores_%s.pdf'%model_suffix
-        results.to_csv( resultsfilename )
+
+        writer = csv.writer(open(resultsfilename, 'wb'))
+        writer.writerow( ['test_error','test_falsepos','test_falseneg','scores'] )
+        for i in range(len(test_error)):
+            writer.writerow( [test_error[i],test_falsepos[i],test_falseneg[i],scores[i]] )
+
         print_filename( resultsfilename , 'saved cross-validation results')
         plt.savefig( plotfilename )
         print_filename( plotfilename , 'plotted cross-validation results')
         print "done cross-validation"
 
 
-
+    # what does the parameter optimization stage do?? How can one use its output?
     do_optimize_paramters = yesno('optimize parameters?') if prompt_yesno else True
     if do_optimize_paramters:
         results_optimize = test_error,test_falsepos,test_falseneg,scores = boost_multiscore.parameter_opt( data , label , weight , parameters )
         resultsfilename = model_path + '/parameter_opt_scores_%s.csv'%model_suffix
-        results.to_csv( resultsfilename )
+        writer = csv.writer(open(resultsfilename, 'wb'))
+        writer.writerow( ['test_error','test_falsepos','test_falseneg','scores'] )
+        for i in range(len(test_error)):
+            writer.writerow( [test_error[i],test_falsepos[i],test_falseneg[i],scores[i]] )
         print_filename( resultsfilename , 'saved optimize parameters results')
         print "done optimizing parameters"
 
