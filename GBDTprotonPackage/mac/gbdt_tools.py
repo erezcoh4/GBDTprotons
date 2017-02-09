@@ -305,7 +305,15 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
     init.generate_directory(model_path)
     print 'generated a new directory: '+model_path
     model_suffix = '%s_%s_%s'%(model_name,data_type_arr[0],data_type_arr[1])
-
+    
+    outfile = open( model_path + '/xgb_%s.fmap'%model_suffix, 'wb')
+    i = 0
+    for feat in feature_names:
+        if feat is not 'truth_KE' and feat is not 'MCpdgCode':
+            outfile.write('%d\t%s\tq\n'%(i, feat))
+            i = i + 1
+    outfile.close()
+    print_filename( model_path + '/xgb_%s.fmap'%model_suffix , 'generated features map' )
 
 
     train_filename = []
@@ -399,15 +407,7 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
 
         if do_make_plots:
             # plot importances with features names...
-            outfile = open('xgb_%s.fmap'%model_suffix, 'w')
-            i = 0
-            for feat in feature_names:
-                if feat is not 'truth_KE' and feat is not 'MCpdgCode':
-                    outfile.write('%d\t%s\tq\n'%(i, feat))
-                    i = i + 1
-                    outfile.close()
-
-            importance = bdt.get_fscore(fmap='xgb_%s.fmap'%model_suffix)
+            importance = bdt.get_fscore(fmap = model_path + '/xgb_%s.fmap'%model_suffix)
             importance = sorted(importance.items(), key=operator.itemgetter(1))
 
             df = pd.DataFrame(importance, columns=['feature', 'fscore'])
