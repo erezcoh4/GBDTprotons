@@ -367,7 +367,9 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
         writer = csv.writer(open(resultsfilename, 'wb'))
         writer.writerow( ['test_error','test_falsepos','test_falseneg','scores'] )
         for i in range(parameters['Nskf']):
-            if debug>2: print 'wriging test errors for skf ',i
+            if debug>2:
+                print 'wriging test errors for skf ',i
+                print [test_error[i],test_falsepos[i],test_falseneg[i],scores[i]]
             writer.writerow( [test_error[i],test_falsepos[i],test_falseneg[i],scores[i]] )
 
         print_filename( resultsfilename , 'saved cross-validation results')
