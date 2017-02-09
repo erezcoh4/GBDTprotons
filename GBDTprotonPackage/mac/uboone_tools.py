@@ -25,6 +25,17 @@ debug = flags.verbose
 # --------------------------------------------------
 
 # main paths
+if "erez" in flags.worker or "helion" in flags.worker:
+
+    import pylab , csv , numpy as np, pandas as pd
+    import matplotlib.pyplot as plt, matplotlib.ticker as ticker
+    import boost_cosmic , predict_cosmic, predict_multi , boost_multiscore
+    from prompter import yesno
+    from xgboost import plot_importance
+    import operator
+    import csv
+
+
 if flags.worker=="erez":
     path = "/Users/erezcohen/Desktop/uBoone"
     main_path       = path + "/AnalysisTreesAna"
@@ -32,11 +43,15 @@ if flags.worker=="erez":
     data_files_path = path + "/DATA"
     ana_files_path  = path + "/analysis/AnaFiles"
     
-    import pylab , csv , numpy as np, pandas as pd
-    import matplotlib.pyplot as plt, matplotlib.ticker as ticker
-    import boost_cosmic , predict_cosmic, predict_multi , boost_multiscore
-    from prompter import yesno
-    import csv
+
+elif flags.worker=="helion":
+    app_path  = "/extra/Erez/uBoone"
+    main_path       = app_path + "/AnalysisTreesAna"
+    data_path = app_path
+    lists_path      = data_path + "/Lists"
+    data_files_path = data_path + "/DATA"
+    ana_files_path  = data_path + "/analysis/AnaFiles"
+
 
 
 elif flags.worker=="uboone":
@@ -49,20 +64,6 @@ elif flags.worker=="uboone":
     
     import csv
 
-
-elif flags.worker=="helion":
-    app_path  = "/extra/Erez/uBoone"
-    main_path       = app_path + "/AnalysisTreesAna"
-    data_path = app_path
-    lists_path      = data_path + "/Lists"
-    data_files_path = data_path + "/DATA"
-    ana_files_path  = data_path + "/analysis/AnaFiles"
-    
-    import pylab , csv , numpy as np, pandas as pd
-    import matplotlib.pyplot as plt, matplotlib.ticker as ticker
-    import boost_cosmic , predict_cosmic, predict_multi , boost_multiscore
-    from prompter import yesno
-    import csv
 
 
 

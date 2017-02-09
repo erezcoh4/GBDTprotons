@@ -23,41 +23,32 @@ GBDTmodelName           = "multi_BNB_TrainedOn_MCBNB_MCCOSMIC"  # options: 'BNB_
 score                   = 0.9                                   # p_score = 0.0 for cosmics
 maxscore                = 'muons'
 
-#parameters = {  'debug':flags.verbose,
-#                'objective':'binary:logistic' ,
-#                'eta':0.025 ,
-#                'eval_metric':'error',
-#                'silent':1,
-#                'nthread':6,
-#                'min_child_weight':4,
-#                'max_depth':13,
-#                'gamma':0.7,
-#                'colsample_bytree':0.5,
-#                'subsample':0.8,
-#                'num_class':5,
-#                'Ntrees':500,
-#                'Nfolds':10,
-##                'reg_alpha':1e-5
-#                }
 
-feature_names = [ # geometry
+feature_names = [
+                 # geometry
+                 # ----------------------
                  'nhits','length', 'distlenratio'
                  ,'theta','phi' # to be removed in another model...
                  ,'starty','startz','endy','endz'# to be removed in another model...
                  # calorimetry
+                 # ----------------------
                  ,'startdqdx','enddqdx','dqdxdiff','dqdxratio','totaldqdx','averagedqdx'
                  # uboonecode tagging and PID
+                 # ----------------------
                  ,'cosmicscore','coscontscore','pidpida','pidchi'
                  # optical information - unused for open cosmic MC
+                 # ----------------------
                  ,'cfdistance'
-                 ,'MCpdgCode' , 'truth_KE' #  necessary just for training..
+                 #  necessary just for training...
+                 # ----------------------
+                 ,'MCpdgCode' , 'truth_KE'
                  ]
 
 
 parameters = dict({
                   'evnts_frac':0.001,# events fraction to process
                   'debug':2, # prints out information during the processes
-                  'Nskf':8, # 100
+                  'Nskf':2, # 100
                   'scale_pos_weight':2., # Balancing of positive and negative weights.
                   'objective':'multi:softprob', # Specify the learning task and the corresponding learning objective or a custom objective function to be used
                   #  in previous rounds was'objective':'binary:logistic'
