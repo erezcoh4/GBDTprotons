@@ -286,7 +286,9 @@ def train_gbdt_cross_validation( FileTypeToDivide , NumberOfEventsToTrain ):
 
 
 # -------------------------------------------------------------------
-def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None, data_type_arr=None , nevents_train_arr=None , parameters=None , tracks_frac=1 , prompt_yesno=False ):
+def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
+                                 data_type_arr=None , nevents_train_arr=None , parameters=None ,
+                                 tracks_frac=1 , prompt_yesno=False , do_make_plots=False):
     
     '''
         Parameters: data_type_arr: ndarray
@@ -337,28 +339,31 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None, data_type
             print "scores: \n",scores
 
         # plot cross-validation results
-        fig = plt.figure(figsize=(20,20))
-        ax = fig.add_subplot(2,2,1)
-        plt.hist(test_error)
-        set_axes(ax,x_label='test error',y_label='counts',fontsize=20)
+        if do_make_plots:
+            fig = plt.figure(figsize=(20,20))
+            ax = fig.add_subplot(2,2,1)
+            plt.hist(test_error)
+            set_axes(ax,x_label='test error',y_label='counts',fontsize=20)
 
-        ax = fig.add_subplot(2,2,2)
-        h,bins,_=plt.hist([test_falsepos,test_falseneg],bins=np.linspace(0,0.03,30),label=['false positive','false negative']);
-        set_axes(ax,x_label='fraction',y_label='counts',fontsize=25)
-        ax.set_xlim(0,0.03)
-        ax.set_ylim(0,1.1*np.max(h))
-        plt.legend(fontsize=25,loc='best')
+            ax = fig.add_subplot(2,2,2)
+            h,bins,_=plt.hist([test_falsepos,test_falseneg],bins=np.linspace(0,0.03,30),label=['false positive','false negative']);
+            set_axes(ax,x_label='fraction',y_label='counts',fontsize=25)
+            ax.set_xlim(0,0.03)
+            ax.set_ylim(0,1.1*np.max(h))
+            plt.legend(fontsize=25,loc='best')
 
-        ax = fig.add_subplot(2,1,2)
-        plt.hist([scores[0],scores[1],scores[2],scores[3],scores[4]],
-                 label=['$p$-score','$\\mu$-score','$\\pi$-score','$em$-score','$cosmic$-score'],
-                 histtype='step',linewidth=2,bins=np.linspace(0,1,20));
-        set_axes(ax,x_label='score',fontsize=25)
-        plt.legend(fontsize=25,loc='best')
+            ax = fig.add_subplot(2,1,2)
+                plt.hist([scores[0],scores[1],scores[2],scores[3],scores[4]],
+                         label=['$p$-score','$\\mu$-score','$\\pi$-score','$em$-score','$cosmic$-score'],
+                         histtype='step',linewidth=2,bins=np.linspace(0,1,20));
+            set_axes(ax,x_label='score',fontsize=25)
+            plt.legend(fontsize=25,loc='best')
+            plotfilename = model_path + '/cv_test_errors_scores_%s.pdf'%model_suffix
+            plt.savefig( plotfilename )
+            print_filename( plotfilename , 'plotted cross-validation results')
 
 
         resultsfilename = model_path + '/cv_test_errors_scores_%s.csv'%model_suffix
-        plotfilename = model_path + '/cv_test_errors_scores_%s.pdf'%model_suffix
 
         writer = csv.writer(open(resultsfilename, 'wb'))
         writer.writerow( ['test_error','test_falsepos','test_falseneg','scores'] )
@@ -366,8 +371,6 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None, data_type
             writer.writerow( [test_error[i],test_falsepos[i],test_falseneg[i],scores[i]] )
 
         print_filename( resultsfilename , 'saved cross-validation results')
-        plt.savefig( plotfilename )
-        print_filename( plotfilename , 'plotted cross-validation results')
         print "done cross-validation"
 
 
@@ -388,29 +391,30 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None, data_type
     if do_make_bdt:
         bdt = boost_multiscore.make_bdt( data , label , weight , parameters)
 
-        # plot importances with features names...
-        outfile = open('xgb_%s.fmap'%model_suffix, 'w')
-        i = 0
-        for feat in feature_names:
-            if feat is not 'truth_KE' and feat is not 'MCpdgCode':
-                outfile.write('{0}\t{1}\tq\n'.format(i, feat))
-                i = i + 1
-                outfile.close()
+        if do_make_plots:
+            # plot importances with features names...
+            outfile = open('xgb_%s.fmap'%model_suffix, 'w')
+            i = 0
+            for feat in feature_names:
+                if feat is not 'truth_KE' and feat is not 'MCpdgCode':
+                    outfile.write('{0}\t{1}\tq\n'.format(i, feat))
+                    i = i + 1
+                    outfile.close()
 
-        importance = bdt.get_fscore(fmap='xgb_%s.fmap'%model_suffix)
-        importance = sorted(importance.items(), key=operator.itemgetter(1))
+            importance = bdt.get_fscore(fmap='xgb_%s.fmap'%model_suffix)
+            importance = sorted(importance.items(), key=operator.itemgetter(1))
 
-        df = pd.DataFrame(importance, columns=['feature', 'fscore'])
-        df['fscore'] = df['fscore'] / df['fscore'].sum()
+            df = pd.DataFrame(importance, columns=['feature', 'fscore'])
+            df['fscore'] = df['fscore'] / df['fscore'].sum()
 
-        plt.figure()
-        df.plot()
-        df.plot(kind='barh', x='feature', y='fscore', legend=False, figsize=(10, 10))
-        plt.title('XGBoost Feature Importance',fontsize=25)
-        plt.xlabel('relative importance',fontsize=25)
-        plt.gcf().savefig( model_path + '/importances_model_%s.pdf'%model_suffix)
-        bdt.save_model( model_path + '/bst_model_%s.bst'%model_suffix)
-        print "done building bst model"
+            plt.figure()
+            df.plot()
+            df.plot(kind='barh', x='feature', y='fscore', legend=False, figsize=(10, 10))
+            plt.title('XGBoost Feature Importance',fontsize=25)
+            plt.xlabel('relative importance',fontsize=25)
+            plt.gcf().savefig( model_path + '/importances_model_%s.pdf'%model_suffix)
+            bdt.save_model( model_path + '/bst_model_%s.bst'%model_suffix)
+            print "done building bst model"
 
     print 'done training, continue with predicting on tracks...'
 
