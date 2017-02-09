@@ -366,6 +366,17 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
         resultsfilename = model_path + '/cv_test_errors_scores_%s.csv'%model_suffix
         writer = csv.writer(open(resultsfilename, 'wb'))
         writer.writerow( ['test_error','test_falsepos','test_falseneg','scores'] )
+        if debug>3:
+            print 'len(test_error),len(test_falsepos),len(test_falseneg),len(scores):',len(test_error),len(test_falsepos),len(test_falseneg),len(scores)
+            print 'test_error:',test_error
+            print 'test_falsepos:',test_falsepos
+            print 'test_falseneg:',test_falseneg
+
+            if debug>4:
+                print 'len(results):',len(results)
+                print 'results:',results
+
+
         for i in range(parameters['Nskf']):
             if debug>2:
                 print 'wriging test errors for skf ',i
@@ -377,7 +388,7 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
 
 
     # what does the parameter optimization stage do?? How can one use its output?
-    do_optimize_paramters = yesno('optimize parameters?') if prompt_yesno else True
+    do_optimize_paramters = yesno('optimize parameters?') if prompt_yesno else False
     if do_optimize_paramters:
         results_optimize = test_error,test_falsepos,test_falseneg,scores = boost_multiscore.parameter_opt( data , label , weight , parameters )
         resultsfilename = model_path + '/parameter_opt_scores_%s.csv'%model_suffix
