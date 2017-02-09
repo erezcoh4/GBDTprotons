@@ -395,6 +395,7 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
     if do_make_bdt:
         bdt = boost_multiscore.make_bdt( data , label , weight , parameters)
         bdt.save_model( model_path + '/bst_model_%s.bst'%model_suffix)
+        print_filename( model_path + '/bst_model_%s.bst'%model_suffix , 'bdt model')
 
         if do_make_plots:
             # plot importances with features names...
@@ -402,7 +403,7 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
             i = 0
             for feat in feature_names:
                 if feat is not 'truth_KE' and feat is not 'MCpdgCode':
-                    outfile.write('{0}\t{1}\tq\n'.format(i, feat))
+                    outfile.write('%d\t%s\tq\n'%(i, feat))
                     i = i + 1
                     outfile.close()
 
@@ -418,6 +419,8 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
             plt.title('XGBoost Feature Importance',fontsize=25)
             plt.xlabel('relative importance',fontsize=25)
             plt.gcf().savefig( model_path + '/importances_model_%s.pdf'%model_suffix)
+            print_filename( model_path + '/importances_model_%s.pdf'%model_suffix , 'bdt model importances')
+
     print "done building bst model"
 
     print 'done training, continue with predicting on tracks...'
