@@ -353,7 +353,7 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
             plt.legend(fontsize=25,loc='best')
 
             ax = fig.add_subplot(2,1,2)
-            plt.hist([scores[0],scores[1],scores[2],scores[3],scores[4]],            
+            plt.hist([scores[0],scores[1],scores[2],scores[3],scores[4]],
                      label=['$p$-score','$\\mu$-score','$\\pi$-score','$em$-score','$cosmic$-score'],
                      histtype='step',linewidth=2,bins=np.linspace(0,1,20));
             set_axes(ax,x_label='score',fontsize=25)
@@ -364,10 +364,10 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
 
 
         resultsfilename = model_path + '/cv_test_errors_scores_%s.csv'%model_suffix
-
         writer = csv.writer(open(resultsfilename, 'wb'))
         writer.writerow( ['test_error','test_falsepos','test_falseneg','scores'] )
-        for i in range(len(test_error)):
+        for i in range(parameters['Nskf']):
+            if debug>2: print 'wriging test errors for skf ',i
             writer.writerow( [test_error[i],test_falsepos[i],test_falseneg[i],scores[i]] )
 
         print_filename( resultsfilename , 'saved cross-validation results')
