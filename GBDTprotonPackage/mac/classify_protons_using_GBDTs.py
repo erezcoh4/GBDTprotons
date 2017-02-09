@@ -56,10 +56,10 @@ feature_labels = [
                   ,'$dq/dx_{total}$','$dq/dx_{average}$'
                  # uboonecode tagging and PID
                  # ----------------------
-                 ,'cosmic score','contained-cosmic score','$PID_A$','$PID_{\chi}$'
+                 ,'cosmic-score','contained-cosmic-score','$PID_A$','$PID_{\chi}$'
                  # optical information - unused for open cosmic MC
                  # ----------------------
-                 ,'closest flash distance'
+                 ,'closest-flash-distance'
                  ]
 
 
@@ -104,7 +104,7 @@ if flags.option=="train GBDTs cross validation" or 'train' in flags.option:
                                  feature_names=feature_names, feature_labels=feature_labels,
                                  data_type_arr=['MC_BNB','openCOSMIC_MC'] , nevents_train_arr=[300000,200000] ,
                                  parameters=parameters ,
-                                 prompt_yesno=False
+                                 prompt_yesno=True
                                  )
 
 
