@@ -46,7 +46,7 @@ feature_names = [
 feature_labels = [
                  # geometry
                  # ----------------------
-                 '$N_{hits}$','$length$', '$l_{pandoraNu} / \sum_j |\\vec{l}_j|$'
+                 '$N_{hits}$','$length$', '$l_{pandoraNu}/\sum_j|\\vec{l}_j|$'
                  ,'$\\theta$','$\\phi$' # to be removed in another model...
                  ,'$y_{start}$','$z_{start}$','$y_{end}$','$z_{start}$'# to be removed in another model...
                  # calorimetry
