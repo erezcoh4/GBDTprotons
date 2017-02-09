@@ -15,7 +15,7 @@ def load_data(  bnb_mc_filename, corsika_mc_filename
 
     #  necessary just for training...
     # ----------------------
-    columns = feature_names
+    columns = [feature_names[i] for i in range(len(feature_names))]
     columns.append('MCpdgCode')
     columns.append('truth_KE')
     if debug>1:
