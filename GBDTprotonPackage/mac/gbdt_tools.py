@@ -380,8 +380,8 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
         for i in range(parameters['Nskf']):
             if debug>2:
                 print 'wriging test errors for skf ',i
-                print [test_error[i],test_falsepos[i],test_falseneg[i],scores[i]]
-            writer.writerow( [test_error[i],test_falsepos[i],test_falseneg[i],scores[i]] )
+                print [test_error[i],test_falsepos[i],test_falseneg[i]]
+            writer.writerow( [test_error[i],test_falsepos[i],test_falseneg[i]] )
 
         print_filename( resultsfilename , 'saved cross-validation results')
         print "done cross-validation"
