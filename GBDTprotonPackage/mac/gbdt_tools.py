@@ -5,20 +5,6 @@ from uboone_tools import *
 from ROOT import GBDTanalysis
 
 
-# The features that we want to use for the GBDT
-# -------------------------
-#feature_names = [ # geometry
-#                 'nhits','length', 'distlenratio'
-#                 ,'theta','phi' # to be removed in another model...
-#                 ,'starty','startz','endy','endz'# to be removed in another model...
-#                 # calorimetry
-#                 ,'startdqdx','enddqdx','dqdxdiff','dqdxratio','totaldqdx','averagedqdx'
-#                 # uboonecode tagging and PID
-#                 ,'cosmicscore','coscontscore','pidpida','pidchi'
-#                 # optical information - unused for open cosmic MC
-#                 ,'cfdistance'
-#                 ,'MCpdgCode' , 'truth_KE' #  necessary just for training..
-#                ]
 
 features_scores_rse = [
                        'run','subrun','event','trackid'
