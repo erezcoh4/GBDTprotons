@@ -32,13 +32,34 @@ feature_names = [
                  ,'starty','startz','endy','endz'# to be removed in another model...
                  # calorimetry
                  # ----------------------
-                 ,'startdqdx','enddqdx','dqdxdiff','dqdxratio','totaldqdx','averagedqdx'
+                 ,'startdqdx','enddqdx'
+                 ,'dqdxdiff','dqdxratio'
+                 ,'totaldqdx','averagedqdx'
                  # uboonecode tagging and PID
                  # ----------------------
                  ,'cosmicscore','coscontscore','pidpida','pidchi'
                  # optical information - unused for open cosmic MC
                  # ----------------------
                  ,'cfdistance'
+                 ]
+
+feature_labels = [
+                 # geometry
+                 # ----------------------
+                 '$N_{hits}$','$length$', '$l_{pandoraNu} / \sum_j |\\vec{l}_j|$'
+                 ,'$\\theta$','$\\phi$' # to be removed in another model...
+                 ,'$y_{start}$','$z_{start}$','$y_{end}$','$z_{start}$'# to be removed in another model...
+                 # calorimetry
+                 # ----------------------
+                 ,'$dq/dx_{start}$','$dq/dx_{end}$'
+                  ,'$(dq/dx_{end})-(dq/dx_{start})$','$(dq/dx_{end})/(dq/dx_{start})$'
+                  ,'$dq/dx_{total}$','$dq/dx_{average}$'
+                 # uboonecode tagging and PID
+                 # ----------------------
+                 ,'cosmic score','contained-cosmic score','$PID_A$','$PID_{\chi}$'
+                 # optical information - unused for open cosmic MC
+                 # ----------------------
+                 ,'closest flash distance'
                  ]
 
 
@@ -80,7 +101,7 @@ if flags.option=="train GBDTs cross validation" or 'train' in flags.option:
     #    train_gbdt_cross_validation( TrainingDataType , NumberOfTrainingEvents )
     train_gbdt_MCBNB_and_CORSIKA(
                                  model_name='all_features_possible' ,
-                                 feature_names=feature_names,
+                                 feature_names=feature_names, feature_labels=feature_labels,
                                  data_type_arr=['MC_BNB','openCOSMIC_MC'] , nevents_train_arr=[300000,200000] ,
                                  parameters=parameters ,
                                  prompt_yesno=False

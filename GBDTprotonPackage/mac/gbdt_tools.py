@@ -286,7 +286,7 @@ def train_gbdt_cross_validation( FileTypeToDivide , NumberOfEventsToTrain ):
 
 
 # -------------------------------------------------------------------
-def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
+def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, feature_labels=None, model_name=None,
                                  data_type_arr=None , nevents_train_arr=None , parameters=None ,
                                  tracks_frac=1 , prompt_yesno=False , do_make_plots=True):
     
@@ -308,10 +308,9 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
     
     outfile = open( model_path + '/xgb_%s.fmap'%model_suffix, 'wb')
     i = 0
-    for feat in feature_names:
-        if feat is not 'truth_KE' and feat is not 'MCpdgCode':
-            outfile.write('%d\t%s\tq\n'%(i, feat))
-            i = i + 1
+    for feat in feature_labels:
+        outfile.write('%d\t%s\tq\n'%(i, feat))
+        i = i + 1
     outfile.close()
     print_filename( model_path + '/xgb_%s.fmap'%model_suffix , 'generated features map' )
 
