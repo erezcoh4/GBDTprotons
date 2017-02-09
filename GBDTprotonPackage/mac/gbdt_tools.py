@@ -403,6 +403,7 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, feature_labels=None, model
             df.plot(kind='barh', x='feature', y='fscore', legend=False, figsize=(10, 10))
             plt.title('XGBoost Feature Importance',fontsize=25)
             plt.xlabel('relative importance',fontsize=25)
+            plt.gcf().tight_layout()
             plt.gcf().savefig( model_path + '/importances_model_%s.pdf'%model_suffix)
             print_filename( model_path + '/importances_model_%s.pdf'%model_suffix , 'bdt model importances')
 
