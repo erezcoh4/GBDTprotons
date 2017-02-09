@@ -23,18 +23,24 @@ def load_data(  bnb_mc_filename, corsika_mc_filename
         print 'using ' , feature_names
 
     mc_bnb_tracks = pd.read_csv(bnb_mc_filename , usecols=columns)
-    mc_bnb_tracks = mc_bnb_tracks[0:int(tracks_frac*len(mc_bnb_tracks))][feature_names] # take only a fraction of the tracks for small-scale training on my machine
+    mc_bnb_tracks = mc_bnb_tracks[0:int(tracks_frac*len(mc_bnb_tracks))] # take only a fraction of the tracks for small-scale training on my machine
     if debug>1:
         print 'mc_bnb_tracks:',mc_bnb_tracks
 
-    mc_bnb_protons  = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==2212) & (mc_bnb_tracks.truth_KE>=KE_min)][feature_names]
-    mc_bnb_pions    = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==211) | (mc_bnb_tracks.MCpdgCode==-211) | (mc_bnb_tracks.MCpdgCode==111)][feature_names]
-    mc_bnb_em       = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==11) | (mc_bnb_tracks.MCpdgCode==-11) | (mc_bnb_tracks.MCpdgCode==22)][feature_names]
-    mc_bnb_muons    = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==13) | (mc_bnb_tracks.MCpdgCode==-13)][feature_names]
+    mc_bnb_protons = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==2212) & (mc_bnb_tracks.truth_KE>=KE_min)]
+    mc_bnb_protons = mc_bnb_protons[feature_names]
+
+    mc_bnb_pions = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==211) | (mc_bnb_tracks.MCpdgCode==-211) | (mc_bnb_tracks.MCpdgCode==111)]
+    mc_bnb_pions = mc_bnb_pions[feature_names]
+
+    mc_bnb_em = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==11) | (mc_bnb_tracks.MCpdgCode==-11) | (mc_bnb_tracks.MCpdgCode==22)]
+    mc_bnb_em = mc_bnb_em[feature_names]
+
+    mc_bnb_muons = mc_bnb_tracks[(mc_bnb_tracks.MCpdgCode==13) | (mc_bnb_tracks.MCpdgCode==-13)]
+    mc_bnb_muons = mc_bnb_muons[feature_names]
 
     corsika_mc_tracks = pd.read_csv(corsika_mc_filename , usecols=columns)
-    corsika_mc_tracks = corsika_mc_tracks[0:int(tracks_frac*len(corsika_mc_tracks))][feature_names] # take only a fraction of the tracks for small-scale training on my machine
-    
+    corsika_mc_tracks = corsika_mc_tracks[0:int(tracks_frac*len(corsika_mc_tracks))] # take only a fraction of the tracks for small-scale training on my machine
     corsika_mc_tracks = corsika_mc_tracks[feature_names]
     
     if debug>1:
