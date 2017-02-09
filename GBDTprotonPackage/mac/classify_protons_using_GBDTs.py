@@ -39,10 +39,8 @@ feature_names = [
                  # optical information - unused for open cosmic MC
                  # ----------------------
                  ,'cfdistance'
-                 #  necessary just for training...
-                 # ----------------------
-                 ,'MCpdgCode' , 'truth_KE'
                  ]
+
 
 
 parameters = dict({
