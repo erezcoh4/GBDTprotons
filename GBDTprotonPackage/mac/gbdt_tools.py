@@ -288,7 +288,7 @@ def train_gbdt_cross_validation( FileTypeToDivide , NumberOfEventsToTrain ):
 # -------------------------------------------------------------------
 def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
                                  data_type_arr=None , nevents_train_arr=None , parameters=None ,
-                                 tracks_frac=1 , prompt_yesno=False , do_make_plots=False):
+                                 tracks_frac=1 , prompt_yesno=False , do_make_plots=True):
     
     '''
         Parameters: data_type_arr: ndarray
@@ -365,16 +365,7 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
 
         resultsfilename = model_path + '/cv_test_errors_scores_%s.csv'%model_suffix
         writer = csv.writer(open(resultsfilename, 'wb'))
-        writer.writerow( ['test_error','test_falsepos','test_falseneg','scores'] )
-        if debug>3:
-            print 'len(test_error),len(test_falsepos),len(test_falseneg),len(scores):',len(test_error),len(test_falsepos),len(test_falseneg),len(scores)
-            print 'test_error:',test_error
-            print 'test_falsepos:',test_falsepos
-            print 'test_falseneg:',test_falseneg
-
-            if debug>4:
-                print 'len(results):',len(results)
-                print 'results:',results
+        writer.writerow( ['test_error','test_falsepos','test_falseneg'] )
 
 
         for i in range(parameters['Nskf']):
@@ -393,9 +384,9 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
         results_optimize = test_error,test_falsepos,test_falseneg,scores = boost_multiscore.parameter_opt( data , label , weight , parameters )
         resultsfilename = model_path + '/parameter_opt_scores_%s.csv'%model_suffix
         writer = csv.writer(open(resultsfilename, 'wb'))
-        writer.writerow( ['test_error','test_falsepos','test_falseneg','scores'] )
+        writer.writerow( ['test_error','test_falsepos','test_falseneg'] )
         for i in range(len(test_error)):
-            writer.writerow( [test_error[i],test_falsepos[i],test_falseneg[i],scores[i]] )
+            writer.writerow( [test_error[i],test_falsepos[i],test_falseneg[i]] )
         print_filename( resultsfilename , 'saved optimize parameters results')
         print "done optimizing parameters"
 
@@ -403,6 +394,7 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
     do_make_bdt = yesno('make bdt?') if prompt_yesno else True
     if do_make_bdt:
         bdt = boost_multiscore.make_bdt( data , label , weight , parameters)
+        bdt.save_model( model_path + '/bst_model_%s.bst'%model_suffix)
 
         if do_make_plots:
             # plot importances with features names...
@@ -426,8 +418,7 @@ def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, model_name=None,
             plt.title('XGBoost Feature Importance',fontsize=25)
             plt.xlabel('relative importance',fontsize=25)
             plt.gcf().savefig( model_path + '/importances_model_%s.pdf'%model_suffix)
-            bdt.save_model( model_path + '/bst_model_%s.bst'%model_suffix)
-            print "done building bst model"
+    print "done building bst model"
 
     print 'done training, continue with predicting on tracks...'
 
