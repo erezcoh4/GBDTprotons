@@ -18,7 +18,7 @@ from my_tools import *
 #                       globals
 # --------------------------------------------------
 debug = flags.verbose
-
+MCCversion = "MCC%d"%flags.MCCversion
 
 # --------------------------------------------------
 #                       paths

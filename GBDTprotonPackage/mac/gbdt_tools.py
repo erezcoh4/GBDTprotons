@@ -274,7 +274,7 @@ def train_gbdt_cross_validation( FileTypeToDivide , NumberOfEventsToTrain ):
 # -------------------------------------------------------------------
 def train_gbdt_MCBNB_and_CORSIKA( feature_names=None, feature_labels=None, model_name=None,
                                  data_type_arr=None , nevents_train_arr=None , parameters=None ,
-                                 tracks_frac=1 , prompt_yesno=False , do_make_plots=True):
+                                 tracks_frac=1 , prompt_yesno=False , do_make_plots=False):
     
     '''
         Parameters: data_type_arr: ndarray
