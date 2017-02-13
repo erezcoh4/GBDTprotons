@@ -42,7 +42,8 @@ if flags.worker=="erez":
     lists_path      = path + "/Lists"
     data_files_path = path + "/DATA"
     ana_files_path  = path + "/analysis/AnaFiles"
-    
+    ccqe_candidates_path= path + "/analysis/ccqe_candidates"
+
 
 elif flags.worker=="helion":
     app_path  = "/extra/Erez/uBoone"
@@ -75,7 +76,6 @@ anatrees_data_path  = "/uboone/data/users/ecohen/AnalysisTreeData"
 eventsfiles_path    = main_path + "/TracksAnaFiles"
 featuresfiles_path  = main_path + "/FeaturesFiles"
 rois_path           = main_path + "/ROIs"
-ccqe_candidates_path= path + "/analysis/ccqe_candidates"
 
 
 # gdbts
