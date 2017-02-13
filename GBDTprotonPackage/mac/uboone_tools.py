@@ -72,9 +72,11 @@ anatrees_lists_path = "/pnfs/uboone/persistent/users/aschu/devel/v05_11_01/hadd"
 anatrees_data_path  = "/uboone/data/users/ecohen/AnalysisTreeData"
 
 # my analysis files
-anafiles_path       = main_path + "/TracksAnaFiles"
+eventsfiles_path    = main_path + "/TracksAnaFiles"
 featuresfiles_path  = main_path + "/FeaturesFiles"
 rois_path           = main_path + "/ROIs"
+ccqe_candidates_path= path + "/analysis/ccqe_candidates"
+
 
 # gdbts
 GBDTmodels_path         = main_path + "/GBDTmodels"
